@@ -75,6 +75,7 @@
                  <a href="#">聯絡我們</a>
                </div>
              </div>
+             <!-- 暫時註解線上服務和查詢功能
              <div class="nlpi-service-search">
                <div class="nlpi-service-popup-wrap">
                  <button class="nlpi-service-popup-btn" 
@@ -111,6 +112,7 @@
                  </div>
                </div>
              </div>
+             -->
            </nav>
          </div>
        </div>
