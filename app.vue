@@ -7,11 +7,11 @@
          <div class="nlpi-header-right">
            <div class="nlpi-top-links-bar">
              <div class="nlpi-top-links">
-               <a href="#">Home</a> ／
-               <a href="#">Sitemap</a> ／
-               <a href="#">Bilingual Glossary</a> ／
-               <a href="#">Contact Us</a> ／
-               <a href="#">FAQ</a> ／
+               <a href="#">首頁</a> ／
+               <a href="#">網站地圖</a> ／
+               <a href="#">雙語字典</a> ／
+               <a href="#">聯絡我們</a> ／
+               <a href="#">常見問題</a> ／
                <a href="#">Zones for different groups</a>
              </div>
              <div class="nlpi-social-lang">              
@@ -75,44 +75,75 @@
                  <a href="#">聯絡我們</a>
                </div>
              </div>
-             <!-- 暫時註解線上服務和查詢功能
-             <div class="nlpi-service-search">
+             <div class="nlpi-service-search-bar">
                <div class="nlpi-service-popup-wrap">
-                 <button class="nlpi-service-popup-btn" 
-                  @click="showServicePopup = !showServicePopup">
-                  線上服務
+                 <button class="nlpi-service-btn" @click="showServicePopup = !showServicePopup">
+                   <span class="nlpi-btn-icon">
+                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="4" stroke="#444" stroke-width="2"/><path d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke="#444" stroke-width="2" stroke-linecap="round"/></svg>
+                   </span>
+                   <span class="nlpi-btn-text">線上服務</span>
                  </button>
                  <div v-if="showServicePopup" class="nlpi-service-popup-panel">
-                   <button class="nlpi-popup-close" @click="showServicePopup = false">✖ Close</button>
-                   <div class="nlpi-popup-content">
-                     <h2>線上服務</h2>
-                     <ul>
-                       <li>登入</li>
-                       <li>報名參加活動</li>
-                       <li>座位及房間預訂</li>
-                       <li>場地及房間租賃</li>
-                       <li>參觀與遊覽</li>
-                     </ul>
+                   <div class="nlpi-popup-content service-cards-content">
+                     <h2 class="service-cards-title">線上服務</h2>
+                     <div class="service-cards-row">
+                       <div class="service-card">
+                         <div class="service-card-inner">
+                           <div class="service-card-icon">
+                             <!-- 身分證 SVG -->
+                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="12" width="32" height="24" rx="3" stroke="#003366" stroke-width="2"/><rect x="14" y="20" width="8" height="8" rx="2" stroke="#003366" stroke-width="2"/><rect x="26" y="20" width="10" height="2" rx="1" fill="#003366"/><rect x="26" y="26" width="10" height="2" rx="1" fill="#003366"/></svg>
+                           </div>
+                           <div class="service-card-label">登入</div>
+                         </div>
+                       </div>
+                       <div class="service-card">
+                         <div class="service-card-inner">
+                           <div class="service-card-icon">
+                             <!-- 報名 SVG -->
+                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="12" y="10" width="24" height="28" rx="2" stroke="#003366" stroke-width="2"/><rect x="16" y="16" width="16" height="2" rx="1" fill="#003366"/><rect x="16" y="22" width="16" height="2" rx="1" fill="#003366"/><rect x="16" y="28" width="10" height="2" rx="1" fill="#003366"/></svg>
+                           </div>
+                           <div class="service-card-label">報名參加活動</div>
+                         </div>
+                       </div>
+                       <div class="service-card">
+                         <div class="service-card-inner">
+                           <div class="service-card-icon">
+                             <!-- 座位 SVG -->
+                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="10" y="18" width="28" height="14" rx="3" stroke="#003366" stroke-width="2"/><rect x="14" y="32" width="20" height="4" rx="2" fill="#003366"/></svg>
+                           </div>
+                           <div class="service-card-label">座位及房間預訂</div>
+                         </div>
+                       </div>
+                       <div class="service-card">
+                         <div class="service-card-inner">
+                           <div class="service-card-icon">
+                             <!-- 場地 SVG -->
+                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="16" width="32" height="16" rx="3" stroke="#003366" stroke-width="2"/><rect x="16" y="24" width="16" height="6" rx="2" fill="#003366"/></svg>
+                           </div>
+                           <div class="service-card-label">場地及房間租賃</div>
+                         </div>
+                       </div>
+                       <div class="service-card">
+                         <div class="service-card-inner">
+                           <div class="service-card-icon">
+                             <!-- 導覽 SVG -->
+                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="10" y="14" width="28" height="20" rx="3" stroke="#003366" stroke-width="2"/><rect x="16" y="20" width="16" height="2" rx="1" fill="#003366"/><rect x="16" y="26" width="10" height="2" rx="1" fill="#003366"/></svg>
+                           </div>
+                           <div class="service-card-label">參觀與遊覽</div>
+                         </div>
+                       </div>
+                     </div>
                    </div>
                  </div>
                </div>
-               <div class="nlpi-search-popup-wrap">
-                 <button class="nlpi-search-popup-btn" @click="showSearchPopup = !showSearchPopup">
-                    搜尋
-                 </button>
-                 <div v-if="showSearchPopup" class="nlpi-search-popup-panel">
-                   <button class="nlpi-popup-close" @click="showSearchPopup = false">✖ Close</button>
-                   <div class="nlpi-popup-content">
-                     <h2>查詢</h2>
-                     <ul>
-                       <li>館藏查詢</li>
-                       <li>活動查詢</li>
-                     </ul>
-                   </div>
-                 </div>
-               </div>
+               <div class="nlpi-btn-divider"></div>
+               <button class="nlpi-service-btn" @click="showSearchPopup = !showSearchPopup">
+                 <span class="nlpi-btn-icon">
+                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#444" stroke-width="2"/><path d="M20 20L17 17" stroke="#444" stroke-width="2" stroke-linecap="round"/></svg>
+                 </span>
+                 <span class="nlpi-btn-text">搜尋</span>
+               </button>
              </div>
-             -->
            </nav>
          </div>
        </div>
@@ -293,7 +324,8 @@
  }
  .nlpi-nav {
    display: flex;
-   gap: 1.5rem;
+   gap: 0.4rem;
+   margin-left: auto;
  }
  .nlpi-nav-link {
    color: #003366;
@@ -301,6 +333,10 @@
    font-weight: 600;
    font-size: 1.35rem;
    transition: color 0.2s;
+   display: flex;
+   align-items: flex-start;
+   position: relative;
+   padding: 0 0.7rem;
  }
  .nlpi-nav-link:hover .nav-label,
  .nlpi-nav-link:focus .nav-label {
@@ -409,6 +445,7 @@
    height: 100px;
    font-size: 1.35rem;
    color: #003366;
+   margin-top: -12px;
  }
  .dropdown-menu {
    position: absolute;
@@ -444,14 +481,53 @@
    background: #f0f4fa;
    color: #0055a5;
  }
- .nlpi-service-search {
+ .nlpi-service-search-bar {
    display: flex;
-   align-items: flex-end;
-   gap: 1rem;
-   margin-left: 2rem;
+   align-items: center;
+   background: #f1f3f6;
+   border-radius: 22px;
+   padding: 0.3rem 1.2rem;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+   width: fit-content;
+   margin: 0;
+   align-self: flex-start;
+   margin-top: 45px;
+   position: relative;
+ }
+ .nlpi-service-popup-wrap {
+   position: relative;
+   display: inline-block;
+ }
+ .nlpi-service-btn {
+   display: flex;
+   align-items: center;
+   background: transparent;
+   border: none;
+   outline: none;
+   cursor: pointer;
+   padding: 0.5rem 1.2rem;
+   font-size: 1.13rem;
+   color: #444;
+   font-weight: 500;
+   border-radius: 18px;
+   transition: background 0.18s;
+ }
+ .nlpi-service-btn:hover {
+   background: #eaf1fa;
+ }
+ .nlpi-btn-icon {
+   display: flex;
+   align-items: center;
+   margin-right: 0.5rem;
+ }
+ .nlpi-btn-divider {
+   width: 1px;
+   height: 28px;
+   background: #d1d5db;
+   margin: 0 0.5rem;
  }
  .nlpi-service-popup-btn, .nlpi-search-popup-btn {
-   background: #e65100;
+   background: #4a90e2;
    color: #fff;
    border: none;
    border-radius: 18px;
@@ -464,17 +540,19 @@
    align-items: center;
    gap: 0.5rem;
    transition: background 0.2s, color 0.2s;
-   height: 56px;
+   height: 48px;
+   align-self: flex-end;
  }
  .nlpi-service-popup-btn:hover, .nlpi-search-popup-btn:hover {
-   background: #ff7f2a;
+   background: #5ba3f5;
    color: #fff;
  }
  .nlpi-service-popup-panel, .nlpi-search-popup-panel {
    position: absolute;
-   top: 120%;
+   top: 110%;
    right: 0;
-   min-width: 420px;
+   width: 1100px;
+   min-width: 1100px;
    background: #f5f6f8;
    border-radius: 24px;
    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
@@ -490,7 +568,7 @@
    to { opacity: 1; transform: translateY(0); }
  }
  .nlpi-popup-close {
-   background: #e65100;
+   background: #4a90e2;
    color: #fff;
    border: none;
    border-radius: 10px;
@@ -503,10 +581,11 @@
  }
  .nlpi-popup-content {
    width: 100%;
+   max-width: none;
    text-align: left;
  }
  .nlpi-popup-content h2 {
-   color: #e65100;
+   color: #003366;
    font-size: 2rem;
    font-style: italic;
    margin-bottom: 1.5rem;
@@ -524,5 +603,63 @@
    color: #888;
    min-width: 120px;
  }
+ /* 新增卡片式服務選單樣式 */
+ .service-cards-content {
+   padding: 2rem 1.5rem 1.5rem 1.5rem;
+ }
+ .service-cards-title {
+   color: #003366;
+   font-size: 2rem;
+   font-style: normal;
+   font-weight: 700;
+   margin-bottom: 1.5rem;
+   text-align: left;
+   padding-left: 28px;
+ }
+ .service-cards-row {
+   display: flex;
+   gap: 2.5rem;
+   justify-content: center;
+   flex-wrap: nowrap;
+   overflow-x: visible;
+   width: 100%;
+ }
+ .service-card {
+   background: #f8fafc;
+   border: 1.5px solid #d1d5db;
+   border-radius: 12px;
+   width: 170px;
+   height: 170px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   transition: border 0.2s, box-shadow 0.2s, color 0.2s;
+   cursor: pointer;
+ }
+
+ .service-card:hover .service-card-label {
+   color: #e65100;
+   font-weight: 600;
+ }
+
+ .service-card-label {
+   color: #666;
+   font-size: 1.13rem;
+   margin-top: 1.1rem;
+   text-align: center;
+ }
+ .service-card-inner {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   border-radius: 12px;
+   border: 1.5px solid #d1d5db;
+   transition: none;
+ }
+ 
  </style>
  
