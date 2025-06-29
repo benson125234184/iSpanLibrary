@@ -1,25 +1,32 @@
 <template>
-  <footer class="footer">
-    <p>© 2025 圖書館 All rights reserved.</p>
+  <footer class="nlpi-footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <div>© 2025 All Rights Reserved by National Library of Public Information</div>
+        <div>地址：402011台中市南區五權南路100號</div>
+        <div>電話：04-2262-5100　TaNet Phone：99077000</div>
+        <div>信箱：nlpi@nlpi.edu.tw</div>
+      </div>
+      <div class="footer-site">
+        <div>交通方式：<a href="#">地理位置</a>｜<a href="#">交通資訊</a></div>
+        <div>網站安全｜<a href="#">隱私權政策</a></div>
+        <div>開放政府資訊｜開放資料｜網站導覽</div>
+        <div>常見問答｜意見信箱</div>
+      </div>
+      <div class="footer-hours">
+        <div>開放時間</div>
+        <div>週二至週六：09:00-21:00</div>
+        <div>週日：09:00-17:00</div>
+        <div>週一及國定假日休館</div>
+      </div>
+    </div>
   </footer>
 </template>
 
 <script setup>
+// 無需 JS
 </script>
 
-
-<style scoped>
-.footer {
-  width: 100%;
-  /* 填滿寬度 */
-  height: 100%;
-  /* 填滿父容器高度 */
-  background: linear-gradient(180deg, #1e3c72, #2a5298);
-  color: white;
-  text-align: center;
-  display: flex;
-  /* 加強文字置中 */
-  align-items: center;
-  justify-content: center;
-}
+<style>
+/* 保持空白或只加 footer 相關必要樣式 */
 </style>
