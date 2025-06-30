@@ -1,0 +1,50 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background: #fff;
+  color: #222;
+}
+h1, h2, h3, .main-title {
+  color: #003366;
+}
+.card, .section, .block, .footer, .sidebar, .nlpi-card, .news-section, .facility-section {
+  background: #f5f6f8;
+  border-radius: 12px;
+}
+a {
+  color: #1976d2;
+  text-decoration: none;
+}
+a:hover {
+  color: #0055a5;
+}
+.text-secondary {
+  color: #666;
+}
+.btn, .nlpi-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:hover, .nlpi-btn:hover {
+  background: #0055a5;
+}
+.btn-outline, .nlpi-btn-outline {
+  background: #fff;
+  color: #1976d2;
+  border: 1.5px solid #1976d2;
+}
+.btn-outline:hover, .nlpi-btn-outline:hover {
+  background: #e3eefd;
+  color: #0055a5;
+  border-color: #0055a5;
+}
