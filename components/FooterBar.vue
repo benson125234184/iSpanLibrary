@@ -3,8 +3,8 @@
     <div class="footer-content">
       <div class="footer-info">
         <div>© 2025 All Rights Reserved by National Library of Public Information</div>
-        <div>地址：402011台中市南區五權南路100號</div>
-        <div>電話：04-2262-5100　TaNet Phone：99077000</div>
+        <div>地址：台中市南屯區公益路二段51號18樓</div>
+        <div>電話：04-2326-5860</div>
         <div>信箱：nlpi@nlpi.edu.tw</div>
       </div>
       <div class="footer-site">
@@ -35,9 +35,11 @@
   padding: 2.5rem 1rem 1.5rem 1rem;
   font-size: 1rem;
 }
+
 .footer-site a {
   color: #1976d2;
 }
+
 .footer-site a:hover {
   color: #0055a5;
 }
