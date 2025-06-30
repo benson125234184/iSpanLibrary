@@ -150,51 +150,52 @@
     </div>
 
     <!-- 登入懸浮視窗 -->
-    <div v-if="showLoginModal" class="login-modal-overlay" @click="closeLoginModal">
-      <div class="login-modal" @click.stop>
-        <div class="login-modal-header">
-          <h3>會員登入</h3>
-          <button class="close-btn" @click="closeLoginModal">×</button>
-        </div>
-        <div class="login-modal-body">
-          <form @submit.prevent="handleLogin" class="login-form">
-            <div class="form-group">
-              <label for="email">電子郵件</label>
-              <input 
-                id="email" 
-                v-model="loginForm.email" 
-                type="email" 
-                placeholder="請輸入您的電子郵件"
-                required
-              />
+    <transition name="login-overlay-fade">
+      <div v-if="showLoginModal" class="login-modal-overlay" @click="closeLoginModal">
+        <transition name="login-modal-zoom">
+          <div v-if="showLoginModal" class="login-modal" @click.stop>
+            <div class="login-modal-header">
+              <h3>會員登入</h3>
+              <button class="close-btn" @click="closeLoginModal">×</button>
             </div>
-            <div class="form-group">
-              <label for="password">密碼</label>
-              <input 
-                id="password" 
-                v-model="loginForm.password" 
-                type="password" 
-                placeholder="請輸入您的密碼"
-                required
-              />
-            </div>
+            <div class="login-modal-body">
+              <form @submit.prevent="handleLogin" class="login-form">
+                <div class="form-group">
+                  <label for="email">電子郵件</label>
+                  <input 
+                    id="email" 
+                    v-model="loginForm.email" 
+                    type="email" 
+                    placeholder="請輸入您的電子郵件"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password">密碼</label>
+                  <input 
+                    id="password" 
+                    v-model="loginForm.password" 
+                    type="password" 
+                    placeholder="請輸入您的密碼"
+                    required
+                  />
+                </div>
 
-            <div class="form-actions">
-              <button type="submit" class="login-btn" :disabled="isLoggingIn">
-                {{ isLoggingIn ? '登入中...' : '登入' }}
-              </button>
-              <button type="button" class="admin-btn" @click="fillAdminCredentials">
-                管理者登入
-              </button>
+                <div class="form-actions">
+                  <button type="submit" class="login-btn" :disabled="isLoggingIn">
+                    {{ isLoggingIn ? '登入中...' : '登入' }}
+                  </button>
+                </div>
+                <div class="form-links">
+                  <a href="/forgot-password" class="forgot-password">忘記密碼？</a>
+                  <a href="/application/card-application" class="register-link">申請新帳號</a>
+                </div>
+              </form>
             </div>
-            <div class="form-links">
-              <a href="/forgot-password" class="forgot-password">忘記密碼？</a>
-              <a href="/application/card-application" class="register-link">申請新帳號</a>
-            </div>
-          </form>
-        </div>
+          </div>
+        </transition>
       </div>
-    </div>
+    </transition>
   </header>
 </template>
 
@@ -229,16 +230,11 @@ function navigateToTab(tab) {
 function closeLoginModal() {
   showLoginModal.value = false
   showServicePopup.value = false
-  // 重置表單
+  // 重置表單和管理者按鈕狀態
   loginForm.value = {
     email: '',
     password: ''
   }
-}
-
-function fillAdminCredentials() {
-  loginForm.value.email = 'admin@library.com'
-  loginForm.value.password = 'admin123'
 }
 
 async function handleLogin() {
@@ -250,27 +246,9 @@ async function handleLogin() {
   isLoggingIn.value = true
 
   try {
-    // 檢查是否為管理者測試帳號
-    if (loginForm.value.email === 'admin@library.com' && loginForm.value.password === 'admin123') {
-      // 管理者測試帳號登入
-      const mockAdminUser = {
-        id: 'admin001',
-        email: 'admin@library.com',
-        name: '圖書館管理者',
-        role: 'admin',
-        permissions: ['manage_books', 'manage_users', 'manage_seats', 'view_reports']
-      }
-      
-      localStorage.setItem('jwt_token', 'mock_admin_token_' + Date.now())
-      localStorage.setItem('user', JSON.stringify(mockAdminUser))
-      localStorage.setItem('user_role', 'admin')
-      
-      alert('管理者登入成功！')
-      closeLoginModal()
-      window.location.reload()
-      return
-    }
-
+    // 檢查是否為管理者帳號
+    const isAdminAccount = loginForm.value.email.toLowerCase() === 'rtny2cpPlzONBEQ55boMSA9Ze@ispnlibrary.com'
+    
     // 一般會員登入
     const res = await axios.post('http://localhost:8080/api/auth/login', {
       email: loginForm.value.email,
@@ -280,12 +258,20 @@ async function handleLogin() {
     // 登入成功，儲存 token
     const token = res.data.token
     const user = res.data.user
+    
+    // 根據帳號類型設置角色
+    const userRole = isAdminAccount ? 'admin' : 'member'
+    
     localStorage.setItem('jwt_token', token)
     localStorage.setItem('user', JSON.stringify(user))
-    localStorage.setItem('user_role', 'member')
+    localStorage.setItem('user_role', userRole)
 
     // 關閉登入視窗
     closeLoginModal()
+    
+    // 顯示登入成功訊息
+    const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
+    alert(roleMessage)
     
     // 重新載入頁面或跳轉
     window.location.reload()
@@ -347,153 +333,185 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: overlayFadeIn 0.3s ease-out;
 }
 
-.login-modal {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  width: 400px;
-  max-width: 90vw;
-  animation: modalFadeIn 0.3s ease-out;
-}
-
-@keyframes modalFadeIn {
+@keyframes overlayFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    backdrop-filter: blur(0px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    backdrop-filter: blur(4px);
   }
+}
+
+.login-modal::before {
+  display: none;
+}
+
+.login-modal {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow:
+    0 8px 32px 0 rgba(0,0,0,0.18),
+    0 1.5px 8px 0 rgba(0,0,0,0.10),
+    0 24px 64px 8px rgba(255,255,255,0.28), /* 柔和白色光暈 */
+    0 48px 120px 0 rgba(255,255,255,0.15); /* 更淡的下方白色光暈 */
+  width: 500px;
+  max-width: 90vw;
+  animation: modalFadeIn 0.3s cubic-bezier(.4,1.4,.6,1);
+  border: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .login-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 24px 32px 20px;
+  border-bottom: none;
+  background: linear-gradient(135deg, #003366 0%, #1976d2 100%);
 }
 
 .login-modal-header h3 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: none;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 24px;
-  color: #6b7280;
+  font-size: 30px;
+  font-weight: bold;
+  color: #003366;
   cursor: pointer;
-  padding: 0;
-  width: 24px;
-  height: 24px;
+  padding: 8px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  border-radius: 50%;
 }
 
 .close-btn:hover {
-  color: #374151;
+  color: #fff;
+  background: #1976d2;
+  transform: scale(1.12);
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
 }
 
 .login-modal-body {
-  padding: 24px;
+  padding: 32px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .form-group label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #374151;
 }
 
 .form-group input {
-  padding: 12px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.2s;
+  padding: 14px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.form-group input:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
 }
 
 .form-group input:focus {
   outline: none;
   border-color: #003366;
-  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
+  transform: translateY(-1px);
 }
 
 .form-actions {
-  margin-top: 8px;
+  margin-top: 12px;
   display: flex;
   gap: 8px;
 }
 
 .login-btn {
   flex: 1;
-  padding: 12px 16px;
-  background: #003366;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #003366 0%, #0055a5 100%);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .login-btn:hover:not(:disabled) {
-  background: #002855;
+  background: linear-gradient(135deg, #002855 0%, #004080 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+}
+
+.login-btn:hover:not(:disabled)::before {
+  left: 100%;
 }
 
 .login-btn:disabled {
   background: #9ca3af;
   cursor: not-allowed;
-}
-
-.admin-btn {
-  padding: 12px 16px;
-  background: #dc2626;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  white-space: nowrap;
-}
-
-.admin-btn:hover {
-  background: #b91c1c;
+  transform: none;
+  box-shadow: none;
 }
 
 .form-links {
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
-  font-size: 14px;
+  margin-top: 20px;
+  font-size: 15px;
 }
 
 .form-links a {
@@ -520,5 +538,36 @@ onMounted(() => {
 
 .service-card:active {
   transform: translateY(0);
+}
+
+.login-modal-zoom-enter-active, .login-modal-zoom-leave-active {
+  transition: all 0.9s cubic-bezier(.4,1.4,.6,1);
+}
+.login-modal-zoom-enter-from {
+  opacity: 0;
+  transform: scale(0.7);
+}
+.login-modal-zoom-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.login-modal-zoom-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.login-modal-zoom-leave-to {
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  filter: blur(2px);
+}
+
+.login-overlay-fade-enter-active, .login-overlay-fade-leave-active {
+  transition: opacity 0.35s cubic-bezier(.4,1.4,.6,1);
+}
+.login-overlay-fade-enter-from, .login-overlay-fade-leave-to {
+  opacity: 0;
+}
+.login-overlay-fade-enter-to, .login-overlay-fade-leave-from {
+  opacity: 1;
 }
 </style>
