@@ -21,10 +21,6 @@
             </li>
           </ul>
         </div>
-        <div v-if="currentUser" class="welcome-message-with-logout">
-          您好 ~ {{ currentUser.name }} 😆
-          <button class="logout-button" @click="handleLogout">登出 ⍈</button>
-        </div>
         <!-- <div class="nlpi-top-links-bar">
           <div class="nlpi-top-links">
             <a href='/'>首頁</a> ／
@@ -146,11 +142,7 @@
                 <div class="nlpi-popup-content service-cards-content">
                   <h2 class="service-cards-title">線上服務</h2>
                   <div class="service-cards-row">
-<<<<<<< Updated upstream
-                    <div class="service-card" v-if="!currentUser" @click="showLoginModal = true">
-=======
                     <div class="service-card" @click="handleUserAction">
->>>>>>> Stashed changes
                       <div class="service-card-inner">
                         <div class="service-card-icon">
                           <template v-if="!isLoggedIn">
@@ -544,14 +536,6 @@ async function handleLogin() {
     // 關閉登入視窗
     closeLoginModal()
 
-<<<<<<< Updated upstream
-    // 顯示登入成功訊息
-    const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
-    alert(roleMessage)
-
-    // 重新載入頁面或跳轉
-    window.location.reload()
-=======
     // 更新用戶狀態
     isLoggedIn.value = true
     userInfo.value = {
@@ -563,7 +547,6 @@ async function handleLogin() {
     // 顯示登入成功訊息
     const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
     showCustomAlert('登入成功', roleMessage, 'alert', '確定')
->>>>>>> Stashed changes
   } catch (err) {
     showCustomAlert('登入失敗', '登入失敗：' + (err.response?.data?.message || err.message))
   } finally {
@@ -610,7 +593,6 @@ function toggleSubMenu(key) {
   submenuStates.value[key] = !submenuStates.value[key]
 }
 
-<<<<<<< Updated upstream
 const showSearchInput = ref(false)
 
 function toggleSearchInput() {
@@ -634,41 +616,6 @@ onMounted(() => {
     if (!isInSearch) showSearchInput.value = false
   })
 })
-
-=======
-const showMegaMenu = ref(false)
-const menuGroups = [
-  {
-    title: '申請服務',
-    items: [
-      { label: '線上辦證', href: '/application/card-application' },
-      { label: '自習座位預約', href: '/application/seat-reservation' },
-      { label: '書籍薦購', href: '/application/book-recommendation' }
-    ]
-  },
-  {
-    title: '借閱服務',
-    items: [
-      { label: '借書查詢', href: '/borrow/borrow-search' },
-      { label: '我要借書', href: '/borrow/borrow-record' },
-      { label: '我要續借', href: '/borrow/borrow-continue' }
-    ]
-  },
-  {
-    title: '館藏查詢',
-    items: [
-      { label: '館藏查詢', href: '/catalogue-search' }
-    ]
-  },
-  {
-    title: '排行榜 & 評論',
-    items: [
-      { label: '借閱排行榜', href: '/ranking/borrowing-rankings' },
-      { label: '讀者書評', href: '/ranking/book-review' }
-    ]
-  }
-]
->>>>>>> Stashed changes
 
 </script>
 
@@ -953,12 +900,6 @@ const menuGroups = [
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .form-group label {
