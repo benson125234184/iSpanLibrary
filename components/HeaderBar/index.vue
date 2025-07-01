@@ -142,7 +142,7 @@
                 <div class="nlpi-popup-content service-cards-content">
                   <h2 class="service-cards-title">線上服務</h2>
                   <div class="service-cards-row">
-                    <div class="service-card">
+                    <div class="service-card" @click="showLoginModal = true">
                       <div class="service-card-inner">
                         <div class="service-card-icon">
                           <!-- 身分證 SVG -->
@@ -225,6 +225,54 @@
         </nav>
       </div>
     </div>
+
+    <!-- 登入懸浮視窗 -->
+    <transition name="login-overlay-fade">
+      <div v-if="showLoginModal" class="login-modal-overlay" @click="closeLoginModal">
+        <transition name="login-modal-zoom">
+          <div v-if="showLoginModal" class="login-modal" @click.stop>
+            <div class="login-modal-header">
+              <h3>會員登入</h3>
+              <button class="close-btn" @click="closeLoginModal">×</button>
+            </div>
+            <div class="login-modal-body">
+              <form @submit.prevent="handleLogin" class="login-form">
+                <div class="form-group">
+                  <label for="email">電子郵件</label>
+                  <input 
+                    id="email" 
+                    v-model="loginForm.email" 
+                    type="email" 
+                    placeholder="請輸入您的電子郵件"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password">密碼</label>
+                  <input 
+                    id="password" 
+                    v-model="loginForm.password" 
+                    type="password" 
+                    placeholder="請輸入您的密碼"
+                    required
+                  />
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="login-btn" :disabled="isLoggingIn">
+                    {{ isLoggingIn ? '登入中...' : '登入' }}
+                  </button>
+                </div>
+                <div class="form-links">
+                  <a href="/forgot-password" class="forgot-password">忘記密碼？</a>
+                  <a href="/application/card-application" class="register-link">申請新帳號</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </transition>
   </header>
 </template>
 
@@ -232,6 +280,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { generateLink } from '@/composables/useNavigation'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -243,6 +292,13 @@ const showAboutMenu = ref(false)
 const showLangMenu = ref(false)
 const showServicePopup = ref(false)
 const showSearchPopup = ref(false)
+const showLoginModal = ref(false)
+const isLoggingIn = ref(false)
+
+const loginForm = ref({
+  email: '',
+  password: ''
+})
 
 const showApplySubMenu = ref(false)
 function toggleApplyMenu() {
@@ -252,6 +308,61 @@ function toggleApplyMenu() {
 function navigateToTab(tab) {
   router.push({ path: '/reader-service', query: { tab } })
   showReaderMenu.value = false
+}
+
+function closeLoginModal() {
+  showLoginModal.value = false
+  showServicePopup.value = false
+  // 重置表單和管理者按鈕狀態
+  loginForm.value = {
+    email: '',
+    password: ''
+  }
+}
+
+async function handleLogin() {
+  if (!loginForm.value.email || !loginForm.value.password) {
+    alert('請輸入電子郵件和密碼')
+    return
+  }
+
+  isLoggingIn.value = true
+
+  try {
+    // 檢查是否為管理者帳號
+    const isAdminAccount = loginForm.value.email.toLowerCase() === 'rtny2cpPlzONBEQ55boMSA9Ze@ispnlibrary.com'
+    
+    // 一般會員登入
+    const res = await axios.post('http://localhost:8080/api/auth/login', {
+      email: loginForm.value.email,
+      password: loginForm.value.password
+    })
+    
+    // 登入成功，儲存 token
+    const token = res.data.token
+    const user = res.data.user
+    
+    // 根據帳號類型設置角色
+    const userRole = isAdminAccount ? 'admin' : 'member'
+    
+    localStorage.setItem('jwt_token', token)
+    localStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('user_role', userRole)
+
+    // 關閉登入視窗
+    closeLoginModal()
+    
+    // 顯示登入成功訊息
+    const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
+    alert(roleMessage)
+    
+    // 重新載入頁面或跳轉
+    window.location.reload()
+  } catch (err) {
+    alert('登入失敗：' + (err.response?.data?.message || err.message))
+  } finally {
+    isLoggingIn.value = false
+  }
 }
 
 onMounted(() => {
@@ -389,5 +500,249 @@ function toggleSubMenu(key) {
   color: #999;
   margin-left: 0.7rem;
   font-size: 1.25rem;
+
+/* 登入懸浮視窗樣式 */
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+.login-modal::before {
+  display: none;
+}
+
+.login-modal {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow:
+    0 8px 32px 0 rgba(0,0,0,0.18),
+    0 1.5px 8px 0 rgba(0,0,0,0.10),
+    0 24px 64px 8px rgba(255,255,255,0.28), /* 柔和白色光暈 */
+    0 48px 120px 0 rgba(255,255,255,0.15); /* 更淡的下方白色光暈 */
+  width: 500px;
+  max-width: 90vw;
+  animation: modalFadeIn 0.3s cubic-bezier(.4,1.4,.6,1);
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px 20px;
+  border-bottom: none;
+  background: linear-gradient(135deg, #003366 0%, #1976d2 100%);
+}
+
+.login-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: none;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 30px;
+  font-weight: bold;
+  color: #003366;
+  cursor: pointer;
+  padding: 8px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-radius: 50%;
+}
+
+.close-btn:hover {
+  color: #fff;
+  background: #1976d2;
+  transform: scale(1.12);
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+}
+
+.login-modal-body {
+  padding: 32px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 14px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.form-group input:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #003366;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.login-btn {
+  flex: 1;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #003366 0%, #0055a5 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.login-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #002855 0%, #004080 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+}
+
+.login-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.login-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.form-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-size: 15px;
+}
+
+.form-links a {
+  color: #003366;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.form-links a:hover {
+  color: #002855;
+  text-decoration: underline;
+}
+
+/* 服務卡片點擊效果 */
+.service-card {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.service-card:active {
+  transform: translateY(0);
+}
+
+.login-modal-zoom-enter-active, .login-modal-zoom-leave-active {
+  transition: all 0.9s cubic-bezier(.4,1.4,.6,1);
+}
+.login-modal-zoom-enter-from {
+  opacity: 0;
+  transform: scale(0.7);
+}
+.login-modal-zoom-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.login-modal-zoom-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+.login-modal-zoom-leave-to {
+  opacity: 0;
+  transform: translateY(80px) scale(0.95);
+  filter: blur(2px);
+}
+
+.login-overlay-fade-enter-active, .login-overlay-fade-leave-active {
+  transition: opacity 0.35s cubic-bezier(.4,1.4,.6,1);
+}
+.login-overlay-fade-enter-from, .login-overlay-fade-leave-to {
+  opacity: 0;
+}
+.login-overlay-fade-enter-to, .login-overlay-fade-leave-from {
+  opacity: 1;
 }
 </style>
