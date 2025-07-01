@@ -21,6 +21,10 @@
             </li>
           </ul>
         </div>
+        <div v-if="currentUser" class="welcome-message-with-logout">
+          您好 ~ {{ currentUser.name }} 😆
+          <button class="logout-button" @click="handleLogout">登出 ⍈</button>
+        </div>
         <!-- <div class="nlpi-top-links-bar">
           <div class="nlpi-top-links">
             <a href='/'>首頁</a> ／
@@ -335,7 +339,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { generateLink } from '@/composables/useNavigation'
 import axios from 'axios'
 import CustomAlert from '@/components/CustomAlert.vue'
@@ -541,8 +545,10 @@ async function handleLogin() {
     userInfo.value = {
       name: user.name || user.email || '會員',
       email: user.email,
-      role: userRole
+      role: user
     }
+    currentUser.value = user //讓<div v-if="currentUser"> 即時顯示，不需刷新。
+
 
     // 顯示登入成功訊息
     const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
@@ -551,6 +557,20 @@ async function handleLogin() {
     showCustomAlert('登入失敗', '登入失敗：' + (err.response?.data?.message || err.message))
   } finally {
     isLoggingIn.value = false
+  }
+
+  const currentPath = router.currentRoute.value.fullPath
+  if (
+    currentPath.includes('/seat-reservation') ||
+    currentPath.includes('/book-recommendation') ||
+    currentPath.includes('/reservation-record') ||
+    currentPath.includes('/reservation-history') ||
+    currentPath.includes('/borrow-search') ||
+    currentPath.includes('/borrow-record') ||
+    currentPath.includes('/borrow-continue') ||
+    currentPath.includes('/book-review')
+  ) {
+    setTimeout(() => router.go(0), 300)  // 延遲一點點確保 alert 被看到
   }
 }
 
@@ -915,6 +935,7 @@ onMounted(() => {
   font-size: 15px;
   transition: all 0.3s ease;
   background: #fafafa;
+  margin-left: 1rem;
 }
 
 .form-group input:hover {
