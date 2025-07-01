@@ -17,7 +17,7 @@
                 </button>
               </template> -->
 
-              <span v-if="index !== links.length - 1" class="separator">＊</span>
+              <span v-if="index !== links.length - 1" class="separator">/</span>
             </li>
           </ul>
         </div>
@@ -146,18 +146,32 @@
                 <div class="nlpi-popup-content service-cards-content">
                   <h2 class="service-cards-title">線上服務</h2>
                   <div class="service-cards-row">
+<<<<<<< Updated upstream
                     <div class="service-card" v-if="!currentUser" @click="showLoginModal = true">
+=======
+                    <div class="service-card" @click="handleUserAction">
+>>>>>>> Stashed changes
                       <div class="service-card-inner">
                         <div class="service-card-icon">
-                          <!-- 身分證 SVG -->
-                          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <rect x="8" y="12" width="32" height="24" rx="3" stroke="#003366" stroke-width="2" />
-                            <rect x="14" y="20" width="8" height="8" rx="2" stroke="#003366" stroke-width="2" />
-                            <rect x="26" y="20" width="10" height="2" rx="1" fill="#003366" />
-                            <rect x="26" y="26" width="10" height="2" rx="1" fill="#003366" />
-                          </svg>
+                          <template v-if="!isLoggedIn">
+                            <!-- 身分證 SVG -->
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                              <rect x="8" y="12" width="32" height="24" rx="3" stroke="#003366" stroke-width="2" />
+                              <rect x="14" y="20" width="8" height="8" rx="2" stroke="#003366" stroke-width="2" />
+                              <rect x="26" y="20" width="10" height="2" rx="1" fill="#003366" />
+                              <rect x="26" y="26" width="10" height="2" rx="1" fill="#003366" />
+                            </svg>
+                          </template>
+                          <template v-else>
+                            <!-- 會員頭像 SVG -->
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                              <circle cx="24" cy="18" r="10" stroke="#003366" stroke-width="2" fill="#e3eaf6" />
+                              <ellipse cx="24" cy="34" rx="14" ry="8" stroke="#003366" stroke-width="2"
+                                fill="#e3eaf6" />
+                            </svg>
+                          </template>
                         </div>
-                        <div class="service-card-label">登入</div>
+                        <div class="service-card-label">{{ isLoggedIn ? userInfo.name : '登入' }}</div>
                       </div>
                     </div>
                     <div class="service-card">
@@ -279,6 +293,51 @@
         </transition>
       </div>
     </transition>
+
+    <!-- 用戶選單 -->
+    <transition name="user-menu-fade">
+      <div v-if="showUserMenu && isLoggedIn" class="user-menu-overlay" @click="showUserMenu = false">
+        <div class="user-menu" @click.stop>
+          <div class="user-menu-header">
+            <div class="user-avatar">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="4" stroke="#003366" stroke-width="2" />
+                <path d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke="#003366" stroke-width="2"
+                  stroke-linecap="round" />
+              </svg>
+            </div>
+            <div class="user-info">
+              <div class="user-name">{{ userInfo.name }}</div>
+              <div class="user-email">{{ userInfo.email }}</div>
+              <div class="user-role">{{ userInfo.role === 'admin' ? '管理者' : '會員' }}</div>
+            </div>
+          </div>
+          <div class="user-menu-body">
+            <button class="user-menu-item" @click="navigateToMemberPage">
+              <span class="menu-icon">👤</span>
+              個人資料
+            </button>
+            <button class="user-menu-item" @click="navigateToBorrowRecord">
+              <span class="menu-icon">📚</span>
+              借閱紀錄
+            </button>
+            <button class="user-menu-item" @click="navigateToReservationRecord">
+              <span class="menu-icon">📅</span>
+              預約紀錄
+            </button>
+            <div class="user-menu-divider"></div>
+            <button class="user-menu-item user-menu-logout" @click="logout">
+              <span class="menu-icon">🚪</span>
+              登出
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- CustomAlert 元件 -->
+    <CustomAlert :show="showAlert" :title="alertTitle" :message="alertMessage" :type="alertType"
+      :confirm-text="alertConfirmText" @close="closeAlert" @confirm="handleAlertConfirm" />
   </header>
 </template>
 
@@ -287,6 +346,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { generateLink } from '@/composables/useNavigation'
 import axios from 'axios'
+import CustomAlert from '@/components/CustomAlert.vue'
 
 const router = useRouter()
 
@@ -299,7 +359,23 @@ const showLangMenu = ref(false)
 const showServicePopup = ref(false)
 const showSearchPopup = ref(false)
 const showLoginModal = ref(false)
+const showUserMenu = ref(false)
 const isLoggingIn = ref(false)
+
+// CustomAlert 相關狀態
+const showAlert = ref(false)
+const alertTitle = ref('')
+const alertMessage = ref('')
+const alertType = ref('alert')
+const alertConfirmText = ref('確認')
+
+// 用戶狀態管理
+const isLoggedIn = ref(false)
+const userInfo = ref({
+  name: '',
+  email: '',
+  role: ''
+})
 
 const loginForm = ref({
   email: '',
@@ -349,9 +425,96 @@ function closeLoginModal() {
   }
 }
 
+// CustomAlert 相關方法
+function showCustomAlert(title, message, type = 'alert', confirmText = '確認') {
+  alertTitle.value = title
+  alertMessage.value = message
+  alertType.value = type
+  alertConfirmText.value = confirmText
+  showAlert.value = true
+}
+
+function closeAlert() {
+  showAlert.value = false
+}
+
+function handleAlertConfirm() {
+  // 可以在這裡處理確認按鈕的邏輯
+  closeAlert()
+}
+
+// 檢查用戶登入狀態
+function checkLoginStatus() {
+  const token = localStorage.getItem('jwt_token')
+  const user = localStorage.getItem('user')
+  const userRole = localStorage.getItem('user_role')
+
+  if (token && user) {
+    try {
+      const userData = JSON.parse(user)
+      isLoggedIn.value = true
+      userInfo.value = {
+        name: userData.name || userData.email || '會員',
+        email: userData.email,
+        role: userRole || 'member'
+      }
+    } catch (error) {
+      console.error('解析用戶資料失敗:', error)
+      logout()
+    }
+  } else {
+    isLoggedIn.value = false
+    userInfo.value = { name: '', email: '', role: '' }
+  }
+}
+
+// 處理用戶操作（登入或顯示用戶選單）
+function handleUserAction() {
+  if (isLoggedIn.value) {
+    // 如果已登入，顯示用戶選單
+    showUserMenu.value = !showUserMenu.value
+  } else {
+    // 如果未登入，顯示登入視窗
+    showLoginModal.value = true
+  }
+}
+
+// 登出功能
+function logout() {
+  localStorage.removeItem('jwt_token')
+  localStorage.removeItem('user')
+  localStorage.removeItem('user_role')
+  isLoggedIn.value = false
+  userInfo.value = { name: '', email: '', role: '' }
+  showUserMenu.value = false
+  showServicePopup.value = false
+  showCustomAlert('登出成功', '您已成功登出系統')
+  window.location.reload()
+}
+
+// 導航到會員頁面
+function navigateToMemberPage() {
+  showUserMenu.value = false
+  showServicePopup.value = false
+  router.push('/member/profile')
+}
+
+// 導航到借閱紀錄
+function navigateToBorrowRecord() {
+  showUserMenu.value = false
+  showServicePopup.value = false
+  router.push('/borrow/borrow-record')
+}
+
+// 導航到預約紀錄
+function navigateToReservationRecord() {
+  showUserMenu.value = false
+  router.push('/reserve/reservation-record')
+}
+
 async function handleLogin() {
   if (!loginForm.value.email || !loginForm.value.password) {
-    alert('請輸入電子郵件和密碼')
+    showCustomAlert('登入錯誤', '請輸入電子郵件和密碼')
     return
   }
 
@@ -381,20 +544,37 @@ async function handleLogin() {
     // 關閉登入視窗
     closeLoginModal()
 
+<<<<<<< Updated upstream
     // 顯示登入成功訊息
     const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
     alert(roleMessage)
 
     // 重新載入頁面或跳轉
     window.location.reload()
+=======
+    // 更新用戶狀態
+    isLoggedIn.value = true
+    userInfo.value = {
+      name: user.name || user.email || '會員',
+      email: user.email,
+      role: userRole
+    }
+
+    // 顯示登入成功訊息
+    const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
+    showCustomAlert('登入成功', roleMessage, 'alert', '確定')
+>>>>>>> Stashed changes
   } catch (err) {
-    alert('登入失敗：' + (err.response?.data?.message || err.message))
+    showCustomAlert('登入失敗', '登入失敗：' + (err.response?.data?.message || err.message))
   } finally {
     isLoggingIn.value = false
   }
 }
 
 onMounted(() => {
+  // 檢查用戶登入狀態
+  checkLoginStatus()
+
   document.addEventListener('click', (e) => {
     if (
       showServicePopup.value &&
@@ -404,6 +584,10 @@ onMounted(() => {
       showSearchPopup.value &&
       !e.target.closest('.nlpi-search-popup-wrap')
     ) showSearchPopup.value = false
+    if (
+      showUserMenu.value &&
+      !e.target.closest('.service-card')
+    ) showUserMenu.value = false
   })
 })
 
@@ -426,6 +610,7 @@ function toggleSubMenu(key) {
   submenuStates.value[key] = !submenuStates.value[key]
 }
 
+<<<<<<< Updated upstream
 const showSearchInput = ref(false)
 
 function toggleSearchInput() {
@@ -450,6 +635,40 @@ onMounted(() => {
   })
 })
 
+=======
+const showMegaMenu = ref(false)
+const menuGroups = [
+  {
+    title: '申請服務',
+    items: [
+      { label: '線上辦證', href: '/application/card-application' },
+      { label: '自習座位預約', href: '/application/seat-reservation' },
+      { label: '書籍薦購', href: '/application/book-recommendation' }
+    ]
+  },
+  {
+    title: '借閱服務',
+    items: [
+      { label: '借書查詢', href: '/borrow/borrow-search' },
+      { label: '我要借書', href: '/borrow/borrow-record' },
+      { label: '我要續借', href: '/borrow/borrow-continue' }
+    ]
+  },
+  {
+    title: '館藏查詢',
+    items: [
+      { label: '館藏查詢', href: '/catalogue-search' }
+    ]
+  },
+  {
+    title: '排行榜 & 評論',
+    items: [
+      { label: '借閱排行榜', href: '/ranking/borrowing-rankings' },
+      { label: '讀者書評', href: '/ranking/book-review' }
+    ]
+  }
+]
+>>>>>>> Stashed changes
 
 </script>
 
@@ -891,5 +1110,277 @@ onMounted(() => {
 .login-overlay-fade-enter-to,
 .login-overlay-fade-leave-from {
   opacity: 1;
+}
+
+/* 用戶選單樣式 */
+.user-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1001;
+  padding-top: 100px;
+}
+
+.user-menu {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 320px;
+  max-width: 90vw;
+  overflow: hidden;
+  animation: userMenuSlideIn 0.3s ease-out;
+}
+
+.user-menu-header {
+  background: linear-gradient(135deg, #003366 0%, #1976d2 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.user-email {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+}
+
+.user-role {
+  font-size: 12px;
+  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.user-menu-body {
+  padding: 8px 0;
+}
+
+.user-menu-item {
+  width: 100%;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.2s;
+}
+
+.user-menu-item:hover {
+  background-color: #f3f4f6;
+}
+
+.user-menu-item:active {
+  background-color: #e5e7eb;
+}
+
+.menu-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.user-menu-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 8px 0;
+}
+
+.user-menu-logout {
+  color: #dc2626;
+}
+
+.user-menu-logout:hover {
+  background-color: #fef2f2;
+}
+
+/* 用戶選單動畫 */
+@keyframes userMenuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.user-menu-fade-enter-active,
+.user-menu-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.user-menu-fade-enter-from,
+.user-menu-fade-leave-to {
+  opacity: 0;
+}
+
+.user-menu-fade-enter-active .user-menu,
+.user-menu-fade-leave-active .user-menu {
+  transition: all 0.3s ease;
+}
+
+.user-menu-fade-enter-from .user-menu,
+.user-menu-fade-leave-to .user-menu {
+  transform: translateY(-20px) scale(0.95);
+  opacity: 0;
+}
+
+/* Mega Menu 樣式 */
+.navbar {
+  background: #fff;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+}
+
+.nav-item {
+  position: relative;
+  padding: 0 24px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #222;
+  cursor: pointer;
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-label {
+  color: #e65100;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.mega-menu-wrapper {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.mega-menu {
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  display: flex;
+  gap: 48px;
+  padding: 32px 48px;
+  margin: 0 auto;
+  min-width: 900px;
+  max-width: 1200px;
+  animation: fadeIn 0.25s;
+}
+
+.mega-menu-col {
+  min-width: 180px;
+}
+
+.mega-menu-title {
+  font-weight: bold;
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  color: #222;
+  position: relative;
+  padding-left: 18px;
+}
+
+.mega-menu-title::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 4px;
+  height: 24px;
+  background: #e65100;
+  border-radius: 2px;
+}
+
+.mega-menu-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mega-menu-item {
+  color: #222;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 4px 0 4px 18px;
+  display: block;
+  border-radius: 4px;
+  transition: background 0.18s, color 0.18s;
+  margin-bottom: 2px;
+}
+
+.mega-menu-item:hover {
+  background: #f3f4f6;
+  color: #1976d2;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mega-fade-enter-active,
+.mega-fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+.mega-fade-enter-from,
+.mega-fade-leave-to {
+  opacity: 0;
 }
 </style>
