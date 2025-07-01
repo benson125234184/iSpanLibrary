@@ -955,12 +955,6 @@ const menuGroups = [
   gap: 20px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .form-group label {
   font-size: 15px;
   font-weight: 500;

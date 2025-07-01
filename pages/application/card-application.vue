@@ -664,14 +664,11 @@ a:hover {
     display: flex;
     align-items: center;
     margin-bottom: 1.5rem;
-    /* 控制每列之間的間距 */
     flex-wrap: wrap;
-    /* 小螢幕時可換行 */
 }
 
 .form-group label {
     min-width: 120px;
-    /* 統一 label 寬度，可依需求調整 */
     font-weight: bold;
     margin-right: 12px;
     text-align: right;
