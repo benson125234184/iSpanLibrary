@@ -15,10 +15,14 @@ const props = defineProps({
     }
 })
 
+const route = useRoute()
 const router = useRouter()
 
 const goToLogin = () => {
-    router.push('/login')
+    router.push({
+        path: '/login',
+        query: { redirect: route.fullPath } // 記下目前頁面
+    })
 }
 </script>
 

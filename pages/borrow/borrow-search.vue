@@ -3,14 +3,7 @@
     <h1>借書查詢</h1>
 
     <!-- 登入檢查 -->
-    <div v-if="!isLoggedIn" class="login-required">
-      <div class="login-required-icon">🔒</div>
-      <h2>需要登入會員</h2>
-      <p>您需要登入會員才能使用借書查詢功能</p>
-      <button @click="goToLogin" class="login-required-btn">
-        前往登入
-      </button>
-    </div>
+    <LoginRequiredPrompt v-if="!isLoggedIn" message="您需要登入會員才能使用借書查詢功能" />
 
     <!-- 借書查詢內容（只有登入後才顯示） -->
     <div v-else>
