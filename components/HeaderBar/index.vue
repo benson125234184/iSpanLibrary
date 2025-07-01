@@ -21,6 +21,10 @@
             </li>
           </ul>
         </div>
+        <div v-if="currentUser" class="welcome-message-with-logout">
+          您好 ~ {{ currentUser.name }} 😆
+          <button class="logout-button" @click="handleLogout">登出 ⍈</button>
+        </div>
         <!-- <div class="nlpi-top-links-bar">
           <div class="nlpi-top-links">
             <a href='/'>首頁</a> ／
@@ -142,7 +146,7 @@
                 <div class="nlpi-popup-content service-cards-content">
                   <h2 class="service-cards-title">線上服務</h2>
                   <div class="service-cards-row">
-                    <div class="service-card" @click="showLoginModal = true">
+                    <div class="service-card" v-if="!currentUser" @click="showLoginModal = true">
                       <div class="service-card-inner">
                         <div class="service-card-icon">
                           <!-- 身分證 SVG -->
@@ -212,7 +216,7 @@
               </div>
             </div>
             <div class="nlpi-btn-divider"></div>
-            <button class="nlpi-service-btn" @click="showSearchPopup = !showSearchPopup">
+            <button class="nlpi-service-btn" @click="toggleSearchInput">
               <span class="nlpi-btn-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                   <circle cx="11" cy="11" r="7" stroke="#444" stroke-width="2" />
@@ -221,6 +225,20 @@
               </span>
               <span class="nlpi-btn-text">搜尋</span>
             </button>
+
+            <!-- 顯示搜尋欄 -->
+            <!-- 下方展開的搜尋輸入欄 -->
+            <transition name="fade-slide">
+              <div v-if="showSearchInput" class="search-input-panel">
+                <input type="text" v-model="keyword" placeholder="站內搜尋" class="search-input"
+                  @keyup.enter="submitSearch" />
+                <button class="search-icon" @click="submitSearch"><svg width="22" height="22" viewBox="0 0 24 24"
+                    fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="#444" stroke-width="2" />
+                    <path d="M20 20L17 17" stroke="#444" stroke-width="2" stroke-linecap="round" />
+                  </svg></button>
+              </div>
+            </transition>
           </div>
         </nav>
       </div>
@@ -239,23 +257,11 @@
               <form @submit.prevent="handleLogin" class="login-form">
                 <div class="form-group">
                   <label for="email">電子郵件</label>
-                  <input 
-                    id="email" 
-                    v-model="loginForm.email" 
-                    type="email" 
-                    placeholder="請輸入您的電子郵件"
-                    required
-                  />
+                  <input id="email" v-model="loginForm.email" type="email" placeholder="請輸入您的電子郵件" required />
                 </div>
                 <div class="form-group">
                   <label for="password">密碼</label>
-                  <input 
-                    id="password" 
-                    v-model="loginForm.password" 
-                    type="password" 
-                    placeholder="請輸入您的密碼"
-                    required
-                  />
+                  <input id="password" v-model="loginForm.password" type="password" placeholder="請輸入您的密碼" required />
                 </div>
 
                 <div class="form-actions">
@@ -300,6 +306,29 @@ const loginForm = ref({
   password: ''
 })
 
+const currentUser = ref(null)
+
+onMounted(() => {
+  const storedUser = localStorage.getItem('user')
+  if (storedUser) {
+    try {
+      currentUser.value = JSON.parse(storedUser)
+    } catch (e) {
+      console.error('使用者資料解析錯誤', e)
+    }
+  }
+})
+
+function handleLogout() {
+  localStorage.removeItem('jwt_token')
+  localStorage.removeItem('user')
+  localStorage.removeItem('user_role')
+  alert('已成功登出')
+  window.location.reload()
+}
+
+
+
 const showApplySubMenu = ref(false)
 function toggleApplyMenu() {
   showApplySubMenu.value = !showApplySubMenu.value
@@ -331,31 +360,31 @@ async function handleLogin() {
   try {
     // 檢查是否為管理者帳號
     const isAdminAccount = loginForm.value.email.toLowerCase() === 'rtny2cpPlzONBEQ55boMSA9Ze@ispnlibrary.com'
-    
+
     // 一般會員登入
     const res = await axios.post('http://localhost:8080/api/auth/login', {
       email: loginForm.value.email,
       password: loginForm.value.password
     })
-    
+
     // 登入成功，儲存 token
     const token = res.data.token
     const user = res.data.user
-    
+
     // 根據帳號類型設置角色
     const userRole = isAdminAccount ? 'admin' : 'member'
-    
+
     localStorage.setItem('jwt_token', token)
     localStorage.setItem('user', JSON.stringify(user))
     localStorage.setItem('user_role', userRole)
 
     // 關閉登入視窗
     closeLoginModal()
-    
+
     // 顯示登入成功訊息
     const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
     alert(roleMessage)
-    
+
     // 重新載入頁面或跳轉
     window.location.reload()
   } catch (err) {
@@ -397,6 +426,31 @@ function toggleSubMenu(key) {
   submenuStates.value[key] = !submenuStates.value[key]
 }
 
+const showSearchInput = ref(false)
+
+function toggleSearchInput() {
+  showSearchInput.value = !showSearchInput.value
+}
+
+
+const keyword = ref('')
+function submitSearch() {
+  const trimmed = keyword.value.trim()
+  if (!trimmed) return
+  router.push(`/search?keyword=${encodeURIComponent(trimmed)}`)
+}
+
+onMounted(() => {
+  document.addEventListener('click', (e) => {
+    const isInService = e.target.closest('.nlpi-service-popup-wrap')
+    if (!isInService) showServicePopup.value = false
+
+    const isInSearch = e.target.closest('.search-input-panel') || e.target.closest('.nlpi-service-btn')
+    if (!isInSearch) showSearchInput.value = false
+  })
+})
+
+
 </script>
 
 <style>
@@ -433,6 +487,85 @@ function toggleSubMenu(key) {
 .nlpi-logo {
   height: 150px;
 }
+
+.nlpi-service-search-bar {
+  display: flex;
+  align-items: center;
+  /* 垂直置中所有子元素 */
+  justify-content: flex-end;
+  gap: 1rem;
+  text-wrap: nowrap;
+}
+
+.nlpi-service-popup-wrap {
+  position: relative;
+}
+
+.welcome-message-with-logout {
+  font-size: large;
+  margin-right: 7rem;
+  color: #003366;
+  transform: translateY(2rem);
+}
+
+.logout-button {
+  background: whitesmoke;
+  border-radius: 1.5rem;
+  border: none;
+  color: #0070c0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  /* text-decoration: underline; */
+  padding: 0;
+}
+
+.logout-button:hover {
+  color: #004a99;
+}
+
+.search-input-panel {
+  position: absolute;
+  top: 100%;
+  /* 接在按鈕下方 */
+  right: 0;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-icon {
+  background: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* 動畫效果 */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
 
 .nlpi-top-links {
   font-size: 1.08rem;
@@ -500,6 +633,7 @@ function toggleSubMenu(key) {
   color: #999;
   margin-left: 0.7rem;
   font-size: 1.25rem;
+}
 
 /* 登入懸浮視窗樣式 */
 .login-modal-overlay {
@@ -522,6 +656,7 @@ function toggleSubMenu(key) {
     opacity: 0;
     backdrop-filter: blur(0px);
   }
+
   to {
     opacity: 1;
     backdrop-filter: blur(4px);
@@ -536,13 +671,15 @@ function toggleSubMenu(key) {
   background: #fff;
   border-radius: 14px;
   box-shadow:
-    0 8px 32px 0 rgba(0,0,0,0.18),
-    0 1.5px 8px 0 rgba(0,0,0,0.10),
-    0 24px 64px 8px rgba(255,255,255,0.28), /* 柔和白色光暈 */
-    0 48px 120px 0 rgba(255,255,255,0.15); /* 更淡的下方白色光暈 */
+    0 8px 32px 0 rgba(0, 0, 0, 0.18),
+    0 1.5px 8px 0 rgba(0, 0, 0, 0.10),
+    0 24px 64px 8px rgba(255, 255, 255, 0.28),
+    /* 柔和白色光暈 */
+    0 48px 120px 0 rgba(255, 255, 255, 0.15);
+  /* 更淡的下方白色光暈 */
   width: 500px;
   max-width: 90vw;
-  animation: modalFadeIn 0.3s cubic-bezier(.4,1.4,.6,1);
+  animation: modalFadeIn 0.3s cubic-bezier(.4, 1.4, .6, 1);
   border: none;
   position: relative;
   overflow: hidden;
@@ -715,34 +852,44 @@ function toggleSubMenu(key) {
   transform: translateY(0);
 }
 
-.login-modal-zoom-enter-active, .login-modal-zoom-leave-active {
-  transition: all 0.9s cubic-bezier(.4,1.4,.6,1);
+.login-modal-zoom-enter-active,
+.login-modal-zoom-leave-active {
+  transition: all 0.9s cubic-bezier(.4, 1.4, .6, 1);
 }
+
 .login-modal-zoom-enter-from {
   opacity: 0;
   transform: scale(0.7);
 }
+
 .login-modal-zoom-enter-to {
   opacity: 1;
   transform: scale(1);
 }
+
 .login-modal-zoom-leave-from {
   opacity: 1;
   transform: scale(1);
 }
+
 .login-modal-zoom-leave-to {
   opacity: 0;
   transform: translateY(80px) scale(0.95);
   filter: blur(2px);
 }
 
-.login-overlay-fade-enter-active, .login-overlay-fade-leave-active {
-  transition: opacity 0.35s cubic-bezier(.4,1.4,.6,1);
+.login-overlay-fade-enter-active,
+.login-overlay-fade-leave-active {
+  transition: opacity 0.35s cubic-bezier(.4, 1.4, .6, 1);
 }
-.login-overlay-fade-enter-from, .login-overlay-fade-leave-to {
+
+.login-overlay-fade-enter-from,
+.login-overlay-fade-leave-to {
   opacity: 0;
 }
-.login-overlay-fade-enter-to, .login-overlay-fade-leave-from {
+
+.login-overlay-fade-enter-to,
+.login-overlay-fade-leave-from {
   opacity: 1;
 }
 </style>
