@@ -134,6 +134,7 @@ onMounted(() => {
     margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 12px;
+    z-index: 1;
 }
 
 /* ✅ 響應式字體與地圖高度：手機專用 */
