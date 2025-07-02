@@ -5,13 +5,13 @@
 
       <div class="nlpi-header-right">
         <!-- 漢堡按鈕 -->
-        <button class="hamburger-btn" @click="toggleMobileMenu">
+        <!-- <button class="hamburger-btn" @click="toggleMobileMenu">
           <svg width="30" height="30" viewBox="0 0 28 28">
             <rect x="3" y="6" width="22" height="4" rx="2" fill="#003366" />
             <rect x="3" y="12" width="22" height="4" rx="2" fill="#003366" />
             <rect x="3" y="18" width="22" height="4" rx="2" fill="#003366" />
           </svg>
-        </button>
+        </button> -->
         <div class="top-links" :class="{ 'menu-open': isMobileMenuOpen }">
           <ul>
             <li v-for="(link, index) in links" :key="link.href || link.label" :title="link.label">
@@ -55,16 +55,16 @@
         </div> -->
         <nav :class="['nlpi-nav', { open: isMobileMenuOpen }]">
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showInfoMenu = true" @mouseleave="showInfoMenu = false">
-            <span class="nav-label">Information</span>
+            <span class="nav-label">最新資訊</span>
             <div v-if="showInfoMenu" class="dropdown-menu">
-              <NuxtLink to="#">最新消息</NuxtLink>
+              <NuxtLink to="/news">最新消息</NuxtLink>
               <NuxtLink to="#">公告事項</NuxtLink>
               <NuxtLink to="#">活動訊息</NuxtLink>
             </div>
           </div>
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showDigitalMenu = true"
             @mouseleave="showDigitalMenu = false">
-            <span class="nav-label">Digital Resources</span>
+            <span class="nav-label">電子資源</span>
             <div v-if="showDigitalMenu" class="dropdown-menu">
               <NuxtLink to="#">電子書</NuxtLink>
               <NuxtLink to="#">電子期刊</NuxtLink>
@@ -73,7 +73,7 @@
           </div>
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showReaderMenu = true"
             @mouseleave="showReaderMenu = false">
-            <span class="nav-label">Reader Service</span>
+            <span class="nav-label">讀者服務</span>
             <div v-if="showReaderMenu" class="dropdown-menu">
               <!-- 申請服務 -->
               <div>
@@ -124,7 +124,7 @@
           </div>
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showLocationMenu = true"
             @mouseleave="showLocationMenu = false">
-            <span class="nav-label">Locations & Hours</span>
+            <span class="nav-label">地點 & 時間</span>
             <div v-if="showLocationMenu" class="dropdown-menu">
               <NuxtLink to='/introduction/location'>本館位置</NuxtLink>
               <NuxtLink to='/introduction/opening-hours'>開放時間</NuxtLink>
@@ -132,11 +132,11 @@
           </div>
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showAboutMenu = true"
             @mouseleave="showAboutMenu = false">
-            <span class="nav-label">About NLPI</span>
+            <span class="nav-label">關於我們</span>
             <div v-if="showAboutMenu" class="dropdown-menu">
               <NuxtLink to='/introduction/about'>本館簡介</NuxtLink>
               <NuxtLink to='/introduction/audience'>服務對象</NuxtLink>
-              <NuxtLink to="#">組織架構</NuxtLink>
+              <!-- <NuxtLink to="#">組織架構</NuxtLink> -->
               <NuxtLink to="#">聯絡我們</NuxtLink>
             </div>
           </div>
