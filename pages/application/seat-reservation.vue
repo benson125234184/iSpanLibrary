@@ -10,8 +10,9 @@
             <h1 class="section-title">
                 {{
                     step === 1 ? '選擇日期 & 預計就座時段' :
-                        step === 2 ? '選擇座位' :
-                            '預約結果'
+                        step === 2 ? '我的預約清單' :
+                            step === 3 ? '選擇座位' :
+                                '預約結果'
                 }}
             </h1>
 
@@ -24,24 +25,46 @@
 
                 <!-- 我的預約按鈕 -->
                 <div style="text-align: center; margin-top: 20px;">
-                    <button v-if="hasReservation" @click="handleMyReservationClick" class="summary-btn">
+                    <button v-if="hasReservation" @click="goToUpcomingReservations" class="summary-btn">
                         📌 我的座位預約
                     </button>
                 </div>
             </div>
+            <!-- 顯示多筆即將到來的預約 -->
+
+            <!-- Step 2：我的預約清單 -->
+            <div v-if="step === 2 && multipleReservations.length > 0" class="reservation-list"
+                style="margin-top: 20px;">
+                <h3 style="text-align: center;">📑 我的預約清單</h3>
+                <ul>
+                    <li v-for="(resv, index) in multipleReservations" :key="index" class="reservation-item"
+                        style="margin: 10px 0;">
+                        <strong>{{ resv.reservationDate }}｜{{ resv.timeSlot }}</strong>｜座位：{{ resv.seatLabel }}
+                        <button class="cancel-btn" @click="cancelReservationByLabel(resv)">取消</button>
+                    </li>
+                </ul>
+
+                <!-- 返回按鈕區塊 -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <button @click="step = 1" class="cancel-btn">⬅ 返回預約</button>
+                    <button @click="step = 3" class="cancel-btn secondary-btn" style="margin-left: 10px;">🔁
+                        返回選座位</button>
+                </div>
+            </div>
 
 
-            <!-- Step 2 -->
-            <div v-if="step === 2">
-                <ButtonsBackButton :step="step" @update:step="step = $event" />
+            <!-- Step 3：選擇座位 -->
+            <div v-if="step === 3">
+                <ButtonsBackButton :step="step" :user-id="userId" :jwt="jwt" message="查看我的預約清單"
+                    @update:step="step = $event" @update:reservations="multipleReservations = $event" />
                 <SeatMap :selectedDate="selectedDate" :selectedSlot="selectedSlot" @confirm="handleConfirmSeat" />
             </div>
 
-            <!-- Step 3 預約完成 -->
-            <SeatReservationSummary v-if="step === 3" :selectedDate="selectedDate"
+            <!-- Step 4：預約完成 -->
+            <SeatReservationSummary v-if="step === 4" :selectedDate="selectedDate"
                 :selectedSlot="`${selectedSlot.start} - ${selectedSlot.end}`" :selectedSeat="selectedSeat" />
 
-            <div v-if="step === 3" class="cancel-button-wrapper" style="margin-top: 20px; text-align: center;">
+            <div v-if="step === 4" class="cancel-button-wrapper" style="margin-top: 20px; text-align: center;">
                 <button @click="cancelReservation" class="cancel-btn">❌ 取消預約</button>
             </div>
         </div>
@@ -160,7 +183,7 @@ const handleNextStep = async () => {
     if (error.value) return alert('❌ 檢查預約時發生錯誤')
     if (data.value === true) return alert('⚠️ 您已預約同一時段的座位')
 
-    step.value = 2
+    step.value = 3
 }
 
 const handleConfirmSeat = async (seatLabel) => {
@@ -225,6 +248,54 @@ const handleMyReservationClick = async () => {
     goToSummaryFromExisting()
 }
 
+const multipleReservations = ref([])
+const showAllReservations = ref(false)
+
+const fetchAllUpcomingReservations = async () => {
+    if (!userId.value) return
+    const { data } = await useFetch('http://localhost:8080/api/seats/reservations/all-upcoming', {
+        method: 'GET',
+        query: { userId: userId.value },
+        headers: {
+            Authorization: `Bearer ${jwt.value}`
+        }
+    })
+    if (data.value) {
+        multipleReservations.value = data.value
+        showAllReservations.value = true
+    } else {
+        multipleReservations.value = []
+        showAllReservations.value = false
+    }
+}
+
+const goToUpcomingReservations = async () => {
+    await fetchAllUpcomingReservations()
+    step.value = 2
+}
+
+const cancelReservationByLabel = async (resv) => {
+    const res = await useFetch('http://localhost:8080/api/seats/reservations/cancel', {
+        method: 'PUT',
+        query: {
+            userId: userId.value,
+            seatLabel: resv.seatLabel,
+            date: resv.reservationDate,
+            timeSlot: resv.timeSlot
+        },
+        headers: {
+            Authorization: `Bearer ${jwt.value}`
+        }
+    })
+
+    if (res.error.value) {
+        alert('❌ 取消預約失敗：' + res.error.value.message)
+    } else {
+        alert(`✅ 已取消 ${resv.reservationDate} ${resv.timeSlot} 的預約`)
+        fetchAllUpcomingReservations()
+    }
+}
+
 </script>
 
 <style scoped>
@@ -237,6 +308,20 @@ const handleMyReservationClick = async () => {
     cursor: pointer;
     font-size: 16px;
     margin-bottom: 5rem;
+}
+
+.secondary-btn {
+    background-color: #ddd;
+    color: #333;
+}
+
+.reservation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7f7f7;
+    padding: 8px 12px;
+    border-radius: 6px;
 }
 
 .cancel-btn:hover {
