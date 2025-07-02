@@ -436,7 +436,8 @@ function getDefaultCoverUrl(book, index) {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 16px;
-  color: #18181b;
+  color: #003366;
+  text-align: center;
 }
 
 .history-main {
