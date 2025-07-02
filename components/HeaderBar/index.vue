@@ -58,8 +58,8 @@
             <span class="nav-label">最新資訊</span>
             <div v-if="showInfoMenu" class="dropdown-menu">
               <NuxtLink to="/news">最新消息</NuxtLink>
-              <NuxtLink to="#">公告事項</NuxtLink>
-              <NuxtLink to="#">活動訊息</NuxtLink>
+              <NuxtLink to="/announcement">公告事項</NuxtLink>
+              <NuxtLink to="/event">活動訊息</NuxtLink>
             </div>
           </div>
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showDigitalMenu = true"
