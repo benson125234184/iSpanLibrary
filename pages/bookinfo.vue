@@ -61,6 +61,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  alias: ['/books']  // 讓 /books?isbn=xxx 也用此頁
+})
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '#imports'

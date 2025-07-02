@@ -2,14 +2,24 @@
   <header class="nlpi-header">
     <div class="nlpi-header-main">
       <img src="/public/images/timelogo.png" alt="Time Library Logo" class="nlpi-logo" />
+
       <div class="nlpi-header-right">
-        <div class="top-links" :class="{ 'menu-open': isMenuOpen }">
+        <!-- 漢堡按鈕 -->
+        <button class="hamburger-btn" @click="toggleMobileMenu">
+          <svg width="30" height="30" viewBox="0 0 28 28">
+            <rect x="3" y="6" width="22" height="4" rx="2" fill="#003366" />
+            <rect x="3" y="12" width="22" height="4" rx="2" fill="#003366" />
+            <rect x="3" y="18" width="22" height="4" rx="2" fill="#003366" />
+          </svg>
+        </button>
+        <div class="top-links" :class="{ 'menu-open': isMobileMenuOpen }">
           <ul>
             <li v-for="(link, index) in links" :key="link.href || link.label" :title="link.label">
               <template v-if="link.label">
                 <NuxtLink :to="generateLink(link.href)" class="top-link">
                   {{ link.label }}
                 </NuxtLink>
+
               </template>
               <!-- <template v-else>
                 <button class="a11y-toggle" @click="toggleAccessibility" aria-label="切換視障友善模式">
@@ -43,7 +53,7 @@
             </div>
           </div>
         </div> -->
-        <nav class="nlpi-nav">
+        <nav :class="['nlpi-nav', { open: isMobileMenuOpen }]">
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showInfoMenu = true" @mouseleave="showInfoMenu = false">
             <span class="nav-label">Information</span>
             <div v-if="showInfoMenu" class="dropdown-menu">
@@ -271,7 +281,9 @@
                 </div>
                 <div class="form-group">
                   <label for="password">密碼</label>
-                  <input id="password" v-model="loginForm.password" type="password" placeholder="請輸入您的密碼" required />
+                  <input id="password" v-model="loginForm.password" :type="showPassword ? 'text' : 'password'"
+                    placeholder="請輸入您的密碼" required />
+                  <button type="button" @click="showPassword = !showPassword">👁</button>
                 </div>
 
                 <div class="form-actions">
@@ -357,6 +369,7 @@ const showSearchPopup = ref(false)
 const showLoginModal = ref(false)
 const showUserMenu = ref(false)
 const isLoggingIn = ref(false)
+const showPassword = ref(false)
 
 // CustomAlert 相關狀態
 const showAlert = ref(false)
@@ -637,6 +650,12 @@ onMounted(() => {
   })
 })
 
+const isMobileMenuOpen = ref(false)
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  console.log('isMobileMenuOpen:', isMobileMenuOpen.value)
+}
+
 </script>
 
 <style>
@@ -672,6 +691,85 @@ onMounted(() => {
 
 .nlpi-logo {
   height: 150px;
+}
+
+.hamburger-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+  font-size: 2rem;
+  color: #003366;
+}
+
+.nlpi-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nlpi-nav-link {
+  color: #003366;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nlpi-nav-link:hover {
+  color: #0055a5;
+}
+
+/* 手機版響應式設計 */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block;
+  }
+
+  .nlpi-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+  }
+
+  .nlpi-nav.open {
+    display: flex;
+  }
+
+  .nlpi-nav-link {
+    padding: 1rem 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.1rem;
+  }
+}
+
+/* 平板 ~ 桌機共用樣式 */
+@media (min-width: 769px) {
+  .nlpi-nav {
+    display: flex !important;
+    flex-direction: row;
+    position: static;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .nlpi-nav-link {
+    border: none;
+    padding: 0;
+  }
+
+  .hamburger-btn {
+    display: none;
+  }
 }
 
 .nlpi-service-search-bar {
@@ -949,6 +1047,14 @@ onMounted(() => {
   background: white;
   box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
   transform: translateY(-1px);
+}
+
+.form-group button {
+  margin-left: 0.5rem;
+  background: none;
+  font-size: xx-large;
+  border: none;
+  cursor: pointer;
 }
 
 .form-actions {
