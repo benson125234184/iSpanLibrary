@@ -4,15 +4,8 @@ body, html {
   overflow-x: hidden;
 }
 
-body {
-  /* background: #fff; */
-  color: #222;
-  background-image: url('/images/0HJ4k12000hcmb6rs90FF.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-}
+
+
 h1, h2, h3, .main-title {
   color: #003366;
 }
