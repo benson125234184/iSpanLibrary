@@ -592,7 +592,8 @@ const checkLoginStatus = () => {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 16px;
-  color: #18181b;
+  color: #003366;
+  text-align: center;
 }
 
 .history-main {
@@ -1103,37 +1104,31 @@ const checkLoginStatus = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 24px;
-  background: #fff;
-  border-top: 1px solid #e9ecef;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .history-pagination-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .history-pagination-btn {
-  width: 40px;
-  height: 40px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 8px;
   border: 1px solid #d1d5db;
+  border-radius: 6px;
   background: #fff;
   color: #18181b;
-  border-radius: 6px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: background 0.2s;
   font-size: 1rem;
-}
-
-.history-pagination-btn:hover:not(:disabled) {
-  background: #f3f4f6;
-  border-color: #9ca3af;
+  line-height: 1;
 }
 
 .history-pagination-btn:disabled {
@@ -1141,9 +1136,13 @@ const checkLoginStatus = () => {
   cursor: not-allowed;
 }
 
+.history-pagination-btn:hover {
+  background: #f3f4f6;
+}
+
 .history-pagination-input {
-  width: 60px;
-  height: 40px;
+  height: 32px;
+  width: 48px;
   text-align: center;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -1152,15 +1151,9 @@ const checkLoginStatus = () => {
   background: #fff;
 }
 
-.history-pagination-input:focus {
-  outline: none;
-  border-color: #1976d2;
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
-}
-
 .history-pagination-info {
-  font-size: 0.9rem;
-  color: #6c757d;
+  font-size: 0.95rem;
+  color: #4b5563;
   text-align: center;
 }
 
