@@ -169,7 +169,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -301,7 +301,23 @@ onMounted(async () => {
       console.error('找不到書籍', e);
     }
   }
+
+  // 監聽登入成功事件
+  const handleLoginSuccess = () => {
+    console.log('收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+  }
+  window.addEventListener('login-success', handleLoginSuccess)
 });
+
+// 組件卸載時移除事件監聽器
+onUnmounted(() => {
+  const handleLoginSuccess = () => {
+    console.log('收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+  }
+  window.removeEventListener('login-success', handleLoginSuccess)
+})
 
 // 修改後的導航到書籍詳情頁方法
 const navigateToBookDetail = async (book) => {

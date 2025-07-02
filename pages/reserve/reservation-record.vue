@@ -219,7 +219,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '#imports'
 import { reservationAPI } from '~/utils/api'
@@ -696,6 +696,30 @@ onMounted(() => {
   } else {
     console.log('[onMounted] 未登入，不載入預約清單')
   }
+
+  // 監聽登入成功事件
+  const handleLoginSuccess = async () => {
+    console.log('[login-success] 收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+    if (isLoggedIn.value) {
+      console.log('[login-success] 已登入，開始載入預約清單')
+      await loadReservationList()
+    }
+  }
+  window.addEventListener('login-success', handleLoginSuccess)
+})
+
+// 組件卸載時移除事件監聽器
+onUnmounted(() => {
+  const handleLoginSuccess = async () => {
+    console.log('[login-success] 收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+    if (isLoggedIn.value) {
+      console.log('[login-success] 已登入，開始載入預約清單')
+      await loadReservationList()
+    }
+  }
+  window.removeEventListener('login-success', handleLoginSuccess)
 })
 
 // ===== 暴露方法 =====

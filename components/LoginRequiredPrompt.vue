@@ -3,27 +3,19 @@
         <div class="login-required-icon">🔒</div>
         <h2>需要登入會員</h2>
         <p>{{ message }}</p>
-        <button @click="goToLogin" class="login-required-btn">前往登入</button>
+        <button @click="showLoginModal" class="login-required-btn">前往登入</button>
     </div>
 </template>
 
 <script setup>
+import { showLoginModal } from '~/composables/useLoginState'
+
 const props = defineProps({
     message: {
         type: String,
         default: '您需要登入會員才能使用相關功能'
     }
 })
-
-const route = useRoute()
-const router = useRouter()
-
-const goToLogin = () => {
-    router.push({
-        path: '/login',
-        query: { redirect: route.fullPath } // 記下目前頁面
-    })
-}
 </script>
 
 <style>

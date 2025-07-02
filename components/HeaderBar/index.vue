@@ -338,9 +338,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { generateLink } from '@/composables/useNavigation'
+import { triggerLoginSuccess } from '@/composables/useLoginState'
 import axios from 'axios'
 import CustomAlert from '@/components/CustomAlert.vue'
 
@@ -549,34 +550,42 @@ async function handleLogin() {
     }
     currentUser.value = user //讓<div v-if="currentUser"> 即時顯示，不需刷新。
 
-
     // 顯示登入成功訊息
     const roleMessage = isAdminAccount ? '管理者登入成功！' : '登入成功！'
     showCustomAlert('登入成功', roleMessage, 'alert', '確定')
+
+    // 觸發全局登入成功事件，讓其他組件知道登入狀態已改變
+    triggerLoginSuccess()
+
+    const currentPath = router.currentRoute.value.fullPath
+    if (
+      currentPath.includes('/seat-reservation') ||
+      currentPath.includes('/book-recommendation') ||
+      currentPath.includes('/reservation-record') ||
+      currentPath.includes('/reservation-history') ||
+      currentPath.includes('/borrow-search') ||
+      currentPath.includes('/borrow-record') ||
+      currentPath.includes('/borrow-continue') ||
+      currentPath.includes('/book-review')
+    ) {
+      setTimeout(() => router.go(0), 300)  // 延遲一點點確保 alert 被看到
+    }
   } catch (err) {
     showCustomAlert('登入失敗', '登入失敗：' + (err.response?.data?.message || err.message))
   } finally {
     isLoggingIn.value = false
-  }
-
-  const currentPath = router.currentRoute.value.fullPath
-  if (
-    currentPath.includes('/seat-reservation') ||
-    currentPath.includes('/book-recommendation') ||
-    currentPath.includes('/reservation-record') ||
-    currentPath.includes('/reservation-history') ||
-    currentPath.includes('/borrow-search') ||
-    currentPath.includes('/borrow-record') ||
-    currentPath.includes('/borrow-continue') ||
-    currentPath.includes('/book-review')
-  ) {
-    setTimeout(() => router.go(0), 300)  // 延遲一點點確保 alert 被看到
   }
 }
 
 onMounted(() => {
   // 檢查用戶登入狀態
   checkLoginStatus()
+
+  // 監聽自定義事件來顯示登入視窗
+  const handleShowLoginModal = () => {
+    showLoginModal.value = true
+  }
+  window.addEventListener('show-login-modal', handleShowLoginModal)
 
   document.addEventListener('click', (e) => {
     if (
@@ -592,6 +601,14 @@ onMounted(() => {
       !e.target.closest('.service-card')
     ) showUserMenu.value = false
   })
+})
+
+onUnmounted(() => {
+  // 移除事件監聽器
+  const handleShowLoginModal = () => {
+    showLoginModal.value = true
+  }
+  window.removeEventListener('show-login-modal', handleShowLoginModal)
 })
 
 let links = [

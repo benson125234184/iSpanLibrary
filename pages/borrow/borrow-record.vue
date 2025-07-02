@@ -167,7 +167,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '#imports'
 import CustomAlert from '~/components/CustomAlert.vue'
@@ -485,6 +485,28 @@ onMounted(async () => {
   if (isLoggedIn.value) {
     await fetchBorrowList()
   }
+
+  // 監聽登入成功事件
+  const handleLoginSuccess = async () => {
+    console.log('收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+    if (isLoggedIn.value) {
+      await fetchBorrowList()
+    }
+  }
+  window.addEventListener('login-success', handleLoginSuccess)
+})
+
+// 組件卸載時移除事件監聽器
+onUnmounted(() => {
+  const handleLoginSuccess = async () => {
+    console.log('收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+    if (isLoggedIn.value) {
+      await fetchBorrowList()
+    }
+  }
+  window.removeEventListener('login-success', handleLoginSuccess)
 })
 
 // ===== 登入狀態檢查 =====

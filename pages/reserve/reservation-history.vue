@@ -193,7 +193,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHead } from '#imports'
 import { reservationAPI } from '~/utils/api'
@@ -605,6 +605,36 @@ onMounted(async () => {
             console.error('初始化載入失敗：', err)
         }
     }
+
+    // 監聽登入成功事件
+    const handleLoginSuccess = async () => {
+        console.log('收到登入成功事件，重新檢查登入狀態')
+        checkLoginStatus()
+        if (isLoggedIn.value) {
+            try {
+                await fetchReservations()
+            } catch (err) {
+                console.error('登入後載入失敗：', err)
+            }
+        }
+    }
+    window.addEventListener('login-success', handleLoginSuccess)
+})
+
+// 組件卸載時移除事件監聽器
+onUnmounted(() => {
+    const handleLoginSuccess = async () => {
+        console.log('收到登入成功事件，重新檢查登入狀態')
+        checkLoginStatus()
+        if (isLoggedIn.value) {
+            try {
+                await fetchReservations()
+            } catch (err) {
+                console.error('登入後載入失敗：', err)
+            }
+        }
+    }
+    window.removeEventListener('login-success', handleLoginSuccess)
 })
 
 // 新增：處理行點擊事件

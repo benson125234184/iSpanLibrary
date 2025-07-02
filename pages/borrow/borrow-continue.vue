@@ -164,7 +164,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { borrowApi, borrowUtils } from '~/utils/borrowApi'
 import CustomAlert from '~/components/CustomAlert.vue'
 import { useRouter } from 'vue-router'
@@ -367,14 +367,46 @@ watch(itemsPerPage, () => {
   currentPage.value = 1
 })
 
-onMounted(() => {
-  // 檢查登入狀態
+// 初始化載入資料
+onMounted(async () => {
   checkLoginStatus()
-
-  // 只有登入後才載入借閱歷史
   if (isLoggedIn.value) {
-    fetchBorrowHistory()
+    try {
+      await fetchBorrowHistory()
+    } catch (err) {
+      console.error('初始化載入失敗：', err)
+    }
   }
+
+  // 監聽登入成功事件
+  const handleLoginSuccess = async () => {
+    console.log('收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+    if (isLoggedIn.value) {
+      try {
+        await fetchBorrowHistory()
+      } catch (err) {
+        console.error('登入後載入失敗：', err)
+      }
+    }
+  }
+  window.addEventListener('login-success', handleLoginSuccess)
+})
+
+// 組件卸載時移除事件監聽器
+onUnmounted(() => {
+  const handleLoginSuccess = async () => {
+    console.log('收到登入成功事件，重新檢查登入狀態')
+    checkLoginStatus()
+    if (isLoggedIn.value) {
+      try {
+        await fetchBorrowHistory()
+      } catch (err) {
+        console.error('登入後載入失敗：', err)
+      }
+    }
+  }
+  window.removeEventListener('login-success', handleLoginSuccess)
 })
 
 // 封面預設（優先 imgUrl > isbn > 預設 SVG）
