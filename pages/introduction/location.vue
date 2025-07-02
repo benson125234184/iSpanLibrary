@@ -124,7 +124,7 @@ onMounted(() => {
 
 
 
-/* ✅ 響應式地圖容器 */
+/*  響應式地圖容器 */
 #map {
     width: 100%;
     max-width: 1000px;
@@ -134,6 +134,7 @@ onMounted(() => {
     margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 12px;
+    z-index: 1;
 }
 
 /* ✅ 響應式字體與地圖高度：手機專用 */
