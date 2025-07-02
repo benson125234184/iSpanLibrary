@@ -2,7 +2,7 @@
     <div class="scroll-wrapper">
         <div class="intro">
             <div class="title-row">
-                <img src="/public/images/libraryLogo.png" alt="Logo" />
+                <!-- <img src="/public/images/libraryLogo.png" alt="Logo" /> -->
                 <h1>本館簡介</h1>
             </div>
             <img src="public\images\0HJ4k12000hcmb6rs90FF.jpg" alt="圖書館外觀" />

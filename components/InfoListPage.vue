@@ -1,32 +1,25 @@
 <template>
   <div class="info-list-bg">
-    <img src="/public/images/library-building.jpg" class="info-list-banner" alt="banner" />
+    <!-- <img src="/images/library-building.jpg" class="info-list-banner" alt="banner" /> -->
     <div class="info-list-container">
       <div class="info-list-title">{{ title }}</div>
       <div class="info-list-tabs">
         <button v-for="tab in tabs" :key="tab" :class="['info-list-tab', {active: tab === activeTab}]" @click="$emit('update:activeTab', tab)">{{ tab }}</button>
       </div>
-      <div class="info-list-search-bar">
-        <select v-model="selectedType" class="info-list-select">
-          <option value="">都</option>
-          <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
-        </select>
-        <input v-model="keyword" class="info-list-input" placeholder="Please enter keyword" />
-        <button class="info-list-search-btn" @click="$emit('search', {type: selectedType, keyword})">搜尋</button>
-      </div>
       <table class="info-list-table">
         <thead>
           <tr>
-            <th>類別名稱</th>
+            <!-- <th>類別名稱</th> -->
             <th>標題</th>
             <th>公告日期</th>
-            <th>打</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in items" :key="item.id">
-            <td>{{ item.type }}</td>
-            <td><a :href="item.link">{{ item.title }}</a></td>
+            <!-- <td>{{ item.type }}</td> -->
+            <td>
+              <NuxtLink :to="item.link || `/news/${item.id}`">{{ item.title }}</NuxtLink>
+            </td>
             <td>{{ item.date }}</td>
             <td>{{ item.views }}</td>
           </tr>
@@ -66,7 +59,7 @@ watch(() => props.activeTab, () => {
 }
 .info-list-container {
   max-width: 1100px;
-  margin: -120px auto 0 auto;
+  margin: 40px auto 0 auto;
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
@@ -75,10 +68,13 @@ watch(() => props.activeTab, () => {
   z-index: 2;
 }
 .info-list-title {
-  font-size: 2.2rem;
-  color: #222;
+  font-size: 2.5rem;
+  color: #003366;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
+  border-left: 6px solid #003366;
+  padding-left: 18px;
 }
 .info-list-tabs {
   display: flex;
@@ -89,7 +85,7 @@ watch(() => props.activeTab, () => {
   background: none;
   border: none;
   font-size: 1.15rem;
-  color: #c0392b;
+  color: #003366;
   font-weight: 600;
   padding: 0.5rem 2.5rem;
   border-radius: 8px 8px 0 0;
@@ -97,8 +93,8 @@ watch(() => props.activeTab, () => {
   transition: background 0.18s, color 0.18s;
 }
 .info-list-tab.active, .info-list-tab:hover {
-  background: #c0392b;
-  color: #fff;
+  background: #e3eaf6;
+  color: #003366;
 }
 .info-list-search-bar {
   display: flex;
@@ -110,10 +106,10 @@ watch(() => props.activeTab, () => {
   font-size: 1.08rem;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #b0c4de;
 }
 .info-list-search-btn {
-  background: #c0392b;
+  background: #003366;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -124,27 +120,66 @@ watch(() => props.activeTab, () => {
   transition: background 0.18s;
 }
 .info-list-search-btn:hover {
-  background: #a93226;
+  background: #002244;
 }
 .info-list-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 2rem;
   background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,51,102,0.06);
+  overflow: hidden;
+}
+.info-list-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #e3eaf6;
+  color: #003366;
+  font-weight: 700;
+  font-size: 1.13rem;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #b0c4de;
+  padding: 1.1rem 0.7rem;
 }
 .info-list-table th, .info-list-table td {
-  border-bottom: 1px solid #eee;
-  padding: 0.9rem 0.5rem;
+  padding: 1.1rem 0.7rem;
   text-align: left;
   font-size: 1.08rem;
 }
-.info-list-table th {
-  color: #c0392b;
-  font-weight: 700;
-  background: #faf6f3;
+.info-list-table tbody tr {
+  transition: background 0.18s;
+}
+.info-list-table tbody tr:hover {
+  background: #f0f6fa;
+}
+.info-list-table td {
+  border-bottom: 1px solid #b0c4de;
+  color: #003366;
+  vertical-align: middle;
 }
 .info-list-table td a {
-  color: #222;
+  color: #003366;
   text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.18s;
+}
+.info-list-table td a:hover {
+  color: #00509e;
+}
+@media (max-width: 900px) {
+  .info-list-container {
+    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+  }
+  .info-list-title {
+    font-size: 1.5rem;
+    padding-left: 10px;
+  }
+  .info-list-table th, .info-list-table td {
+    padding: 0.7rem 0.3rem;
+    font-size: 0.98rem;
+  }
 }
 </style> 
