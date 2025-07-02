@@ -95,6 +95,9 @@
 
             <!-- 按鈕區域 -->
             <div class="result-btn-area">
+              <button type="button" @click="goToReservationHistory" class="result-btn result-btn-history">
+                查看預約紀錄
+              </button>
               <button type="button" @click="goToReservationList" class="result-btn result-btn-record">
                 查看預約清單
               </button>
@@ -215,6 +218,11 @@ function formatDateTime(dateTimeStr: string) {
 // 跳轉到預約清單頁面
 function goToReservationList() {
   router.push('/reserve/reservation-record')
+}
+
+// 跳轉到預約記錄頁面
+function goToReservationHistory() {
+  router.push('/reserve/reservation-history')
 }
 
 // 返回首頁
@@ -359,7 +367,7 @@ onMounted(() => {
 .result-success-title {
   font-size: 2rem;
   font-weight: bold;
-  color: #18181b;
+  color: #003366;
   margin-bottom: 8px;
 }
 
@@ -434,7 +442,7 @@ onMounted(() => {
 
 .result-info-item {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 8px;
   flex-wrap: wrap;
 }
@@ -504,6 +512,16 @@ onMounted(() => {
 
 .result-btn-record:hover {
   background: #1d4ed8;
+}
+
+.result-btn-history {
+  background: #10b981;
+  color: white;
+  border: none;
+}
+
+.result-btn-history:hover {
+  background: #059669;
 }
 
 .result-btn-home {

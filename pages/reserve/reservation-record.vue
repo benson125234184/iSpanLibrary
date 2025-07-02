@@ -817,7 +817,8 @@ const handleRowClick = (bookId) => {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 16px;
-  color: #18181b;
+  color: #003366;
+  text-align: center;
 }
 
 .history-main {
@@ -1358,10 +1359,7 @@ const handleRowClick = (bookId) => {
   align-items: center;
   gap: 12px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  border: 1px solid rgba(229, 231, 235, 0.4);
+  background: transparent;
 }
 
 .history-pagination-controls {
