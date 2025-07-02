@@ -922,20 +922,36 @@ onMounted(() => {
   gap: 20px;
 }
 
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
 .form-group label {
+  width: 90px;
+  min-width: 90px;
+  text-align: left;
   font-size: 15px;
   font-weight: 500;
   color: #374151;
+  margin-right: 8px;
+  margin-bottom: 0;
 }
 
 .form-group input {
+  flex: 1;
+  width: 100%;
+  min-width: 200px;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 14px 18px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.3s ease;
   background: #fafafa;
-  margin-left: 1rem;
+  margin-left: 0;
 }
 
 .form-group input:hover {

@@ -35,7 +35,7 @@
     </div>
     <!-- 設施區塊 -->
     <section v-if="!showReaderServices" class="facility-section">
-      <h2 class="facility-title">圖書館設施</h2>
+      <h2 class="facility-title">圖書館環境</h2>
       <div class="facility-list-large">
         <div class="facility-card-large" v-for="f in facilityList.slice(0, 3)" :key="f.id">
           <div class="facility-img-wrap-large">
@@ -117,22 +117,22 @@ const newsList = [
 
 // 設施資料
 const facilityList = [
-  { id: 1, img: '/images/sub03_0103_img09.jpg', name: '閱覽區' },
-  { id: 2, img: '/images/sub03_0103_img10.jpg', name: '藏書展示' },
-  { id: 3, img: '/images/sub03_0103_img11.jpg', name: '多媒體區' },
-  // { id: 4, img: '/images/sub03_0103_img12.jpg', name: '自修教室' },
-  // { id: 5, img: '', name: '討論區' },
-  // { id: 6, img: '', name: '兒童閱覽區' }
+  { id: 1, img: '/images/13.jpg', name: '1' },
+  { id: 2, img: '/images/14.jpg', name: '2' },
+  { id: 3, img: '/images/15.jpg', name: '3' },
+  { id: 4, img: '/images/16.jpg', name: '4' },
+  { id: 5, img: '/images/17.jpg', name: '5' },
+  { id: 6, img: '/images/19.jpg', name: '6' }
 ]
 
 // 書籍輪播資料
 const bookList = [
-  { title: '森林裡的圖書館', img: '/images/2014713660039b.jpg' },
-  { title: '閱讀新世界', img: '/images/1609249670-2052694399-g_m.jpg' },
-  { title: '翻頁的奇蹟', img: '/images/986199233.jpg' },
-  { title: '親子共讀時光', img: '/images/eb0bb43a326e8709.jpg' },
-  { title: '知識的寶庫', img: '/images/9789861993980.jpg' },
-  { title: '書香滿室', img: '/images/elmmo9g_460x580-200x200.jpg' },
+  { title: '#', img: '/images/2014713660039b.jpg' },
+  { title: '#', img: '/images/1609249670-2052694399-g_m.jpg' },
+  { title: '#', img: '/images/986199233.jpg' },
+  { title: '#', img: '/images/eb0bb43a326e8709.jpg' },
+  { title: '#', img: '/images/9789861993980.jpg' },
+  { title: '#', img: '/images/elmmo9g_460x580-200x200.jpg' },
 ]
 const currentIndex = ref(0)
 const showCount = 3

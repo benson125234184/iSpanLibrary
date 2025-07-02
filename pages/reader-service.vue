@@ -4,12 +4,8 @@
     <!-- 路徑導覽 -->
     <div class="reader-panel">
       <aside class="sidebar">
-        <div
-          v-for="item in tabList"
-          :key="item.value"
-          :class="['sidebar-item', { active: currentTab === item.value }]"
-          @click="currentTab = item.value; goTab(item.value)"
-        >
+        <div v-for="item in tabList" :key="item.value" :class="['sidebar-item', { active: currentTab === item.value }]"
+          @click="currentTab = item.value; goTab(item.value)">
           {{ item.label }}
         </div>
       </aside>
@@ -85,6 +81,7 @@ function goTab(tab) {
   min-height: 100vh;
   background: #f8fafc;
 }
+
 .main-banner {
   width: 100%;
   max-height: 260px;
@@ -92,29 +89,34 @@ function goTab(tab) {
   display: block;
   margin-bottom: 0;
 }
+
 .breadcrumb {
   padding: 0 0 12px 0;
   font-size: 1.05rem;
   color: #333;
 }
+
 .breadcrumb-link {
   color: #1976d2;
   cursor: pointer;
   text-decoration: underline;
 }
+
 .breadcrumb-link:hover {
   color: #d32d1c;
 }
+
 .reader-panel {
   max-width: 1200px;
   margin: -60px auto 0 auto;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   display: flex;
   min-height: 500px;
   overflow: hidden;
 }
+
 .sidebar {
   width: 240px;
   background: #f3f4f6;
@@ -124,6 +126,7 @@ function goTab(tab) {
   flex-direction: column;
   gap: 2px;
 }
+
 .sidebar-item {
   padding: 16px 32px;
   cursor: pointer;
@@ -133,12 +136,14 @@ function goTab(tab) {
   border-left: 4px solid transparent;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
+
 .sidebar-item.active {
   background: #fff;
   color: #d32d1c;
   border-left: 4px solid #d32d1c;
   font-weight: bold;
 }
+
 .tab-content {
   flex: 1;
   padding: 48px 40px;
@@ -147,25 +152,29 @@ function goTab(tab) {
   display: flex;
   flex-direction: column;
 }
+
 .tab-content h2 {
   font-size: 1.5rem;
   color: #d32d1c;
   margin-bottom: 1.5rem;
 }
+
 .tab-block {
   background: #f8fafc;
   border-radius: 8px;
   padding: 32px 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   color: #333;
   font-size: 1.1rem;
 }
+
 @media (max-width: 900px) {
   .reader-panel {
     flex-direction: column;
     box-shadow: none;
     border-radius: 0;
   }
+
   .sidebar {
     width: 100%;
     flex-direction: row;
@@ -174,6 +183,7 @@ function goTab(tab) {
     padding: 0;
     gap: 0;
   }
+
   .sidebar-item {
     flex: 1;
     text-align: center;
@@ -181,16 +191,19 @@ function goTab(tab) {
     border-left: none;
     border-bottom: 4px solid transparent;
   }
+
   .sidebar-item.active {
     border-left: none;
     border-bottom: 4px solid #d32d1c;
   }
+
   .tab-content {
     padding: 24px 10px;
   }
+
   .breadcrumb {
     padding: 18px 10px 0 10px;
     font-size: 1rem;
   }
 }
-</style> 
+</style>
