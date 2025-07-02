@@ -10,7 +10,9 @@
         <div class="news-card-large">
           <img :src="newsList[0].img" :alt="newsList[0].title" class="news-img-large" />
           <div class="news-info-large">
-            <h3 class="news-item-title-large">{{ newsList[0].title }}</h3>
+            <h3 class="news-item-title-large">
+              <NuxtLink :to="`/news-detail/${newsList[0].id}`" target="_blank" rel="noopener">{{ newsList[0].title }}</NuxtLink>
+            </h3>
             <div class="news-date-large">{{ newsList[0].date }}</div>
             <div class="news-desc-large">{{ newsList[0].desc }}</div>
           </div>
@@ -21,10 +23,12 @@
         <div class="news-card-small" v-for="news in newsList.slice(1, 4)" :key="news.id">
           <img :src="news.img" :alt="news.title" class="news-img-small" />
           <div class="news-info-small">
-            <h3 class="news-item-title-small">{{ news.title }}</h3>
+            <h3 class="news-item-title-small">
+              <NuxtLink :to="`/news-detail/${news.id}`" target="_blank" rel="noopener">{{ news.title }}</NuxtLink>
+            </h3>
             <div class="news-date-small">{{ news.date }}</div>
             <div class="news-desc-small">{{ news.descShort }}</div>
-            <button class="news-read-more-btn">查看更多</button>
+            <NuxtLink :to="`/news-detail/${news.id}`" class="news-read-more-btn" target="_blank" rel="noopener">查看更多</NuxtLink>
           </div>
         </div>
       </div>

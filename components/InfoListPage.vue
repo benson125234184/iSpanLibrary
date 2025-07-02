@@ -7,10 +7,15 @@
         <span class="header-title">標題</span>
         <span class="header-date">公告日期</span>
       </div>
-      <div v-for="item in items" :key="item.id" class="info-list-news-item">
+      <div v-for="(item, idx) in items" :key="item.id" class="info-list-news-item">
         <div class="news-title-row">
           <span class="news-title">
-            <NuxtLink :to="item.link || `/news/${item.id}`">{{ item.title }}</NuxtLink>
+            <template v-if="idx < 3">
+              <NuxtLink :to="`/news-detail/${item.id}`">{{ item.title }}</NuxtLink>
+            </template>
+            <template v-else>
+              {{ item.title }}
+            </template>
           </span>
           <span class="news-date">{{ item.date }}</span>
         </div>
