@@ -477,7 +477,7 @@ function goBack() {
 .reservation-title {
     font-size: 2rem;
     font-weight: bold;
-    color: #18181b;
+    color: #003366;
 }
 
 .reservation-subtitle {
