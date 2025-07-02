@@ -562,9 +562,22 @@ async function handleBatchCancel() {
 async function proceedWithBatchCancellation(idsToCancel) {
     try {
         await reservationAPI.batchCancelReservations(idsToCancel);
+
+        // 立即更新本地狀態，讓用戶能立即看到視覺效果
+        idsToCancel.forEach(id => {
+            const reservation = reservationBooks.value.find(b => b.reservationId === id);
+            if (reservation) {
+                reservation.status = 'cancelled';
+            }
+        });
+
         showAlert('操作完成', '批量取消操作已完成。');
-        await fetchReservations();
         selectedBooks.value = [];
+
+        // 延遲重新載入資料，確保後端狀態已更新
+        setTimeout(async () => {
+            await fetchReservations();
+        }, 1000);
     } catch (err) {
         console.error('批量取消失敗：', err);
         showAlert('錯誤', '批量取消時發生錯誤，請稍後再試。');
@@ -703,7 +716,8 @@ function handleRowClick(reservationId) {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 16px;
-    color: #18181b;
+    color: #003366;
+    text-align: center;
 }
 
 .history-main {
@@ -1087,10 +1101,7 @@ function handleRowClick(reservationId) {
     align-items: center;
     gap: 12px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    border: 1px solid rgba(229, 231, 235, 0.4);
+    background: transparent;
 }
 
 .history-pagination-controls {

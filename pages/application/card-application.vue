@@ -762,7 +762,7 @@ a:hover {
 
 .password-wrapper input {
     flex: 1;
-    width: 20rem;
+    width: 21rem;
 }
 
 .password-wrapper button {

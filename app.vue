@@ -1,6 +1,8 @@
 <template>
   <HeaderBar />
-  <NuxtPage />
+  <div class="container">
+    <NuxtPage />
+  </div>
   <FooterBar />
 </template>
 
@@ -91,6 +93,14 @@ const facilityList = [
 </script>
 
 <style>
+.container {
+  background-image: url('/public/images/library-bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+}
+
 body,
 .nlpi-wrapper {
   background: #fff;

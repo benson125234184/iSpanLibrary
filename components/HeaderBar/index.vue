@@ -136,8 +136,7 @@
             <div v-if="showAboutMenu" class="dropdown-menu">
               <NuxtLink to='/introduction/about'>本館簡介</NuxtLink>
               <NuxtLink to='/introduction/audience'>服務對象</NuxtLink>
-              <!-- <NuxtLink to="#">組織架構</NuxtLink> -->
-              <NuxtLink to="#">聯絡我們</NuxtLink>
+              <NuxtLink to='/introduction/contact'>聯絡我們</NuxtLink>
             </div>
           </div>
           <div class="nlpi-service-search-bar">
