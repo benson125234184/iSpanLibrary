@@ -99,6 +99,8 @@ const facilityList = [
   background-repeat: no-repeat;
   background-position: center;
   min-height: 100vh;
+  font-weight: bolder;
+  font-size: larger;
 }
 
 body,
