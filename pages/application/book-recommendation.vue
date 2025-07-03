@@ -3,7 +3,7 @@
         <LoginRequiredPrompt v-if="!isLoggedIn" message="您需要登入才能推薦書籍" />
         <div v-else class="feedback">
             <div class="title-row">
-                <img src="/images/libraryCard.jpg" alt="借閱證圖片" />
+                <!-- <img src="/images/libraryCard.jpg" alt="借閱證圖片" /> -->
                 <h1>書籍薦購</h1>
             </div>
             <h1 class="section-title"> {{

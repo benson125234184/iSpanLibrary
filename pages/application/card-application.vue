@@ -2,7 +2,7 @@
         <div class="scroll-wrapper">
             <div class="library-card">
                 <div class="title-row">
-                    <img src="/images/libraryCard.jpg" alt="借閱證圖片" />
+                    <!-- <img src="/images/libraryCard.jpg" alt="借閱證圖片" /> -->
                     <h1>借閱證申請</h1>
                 </div>
                 <h1 class="section-title"> {{
