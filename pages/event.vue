@@ -1,8 +1,5 @@
 <template>
-  <InfoListPage
-    title="活動訊息"
-    :items="items"
-  />
+  <InfoListPage title="活動訊息" :items="items" />
 </template>
 <script setup>
 import InfoListPage from '~/components/InfoListPage.vue'
@@ -32,4 +29,4 @@ const items = computed(() =>
     link: `/event/${n.id}`
   }))
 )
-</script> 
+</script>

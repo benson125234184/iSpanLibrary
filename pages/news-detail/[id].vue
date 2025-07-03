@@ -8,7 +8,7 @@
       </div>
       <img v-if="news.img" :src="news.img" :alt="news.title" class="news-detail-img" />
       <div class="news-detail-content" v-html="news.content"></div>
-      <NuxtLink to="/" class="news-detail-back">返回首頁</NuxtLink>
+      <button class="news-detail-back" @click="goBack">返回上一頁</button>
     </div>
     <div v-else class="news-detail-notfound">查無此消息</div>
   </div>
@@ -48,7 +48,15 @@ const newsList = [
 
 const route = useRoute()
 const news = computed(() => newsList.find(n => n.id === Number(route.params.id)))
-</script> 
+
+function goBack() {
+  if (window.history.length > 1) {
+    window.history.back()
+  } else {
+    window.location.href = '/'
+  }
+}
+</script>
 
 <style scoped>
 .news-detail-bg {
@@ -59,10 +67,11 @@ const news = computed(() => newsList.find(n => n.id === Number(route.params.id))
   justify-content: center;
   padding: 40px 0;
 }
+
 .news-detail-card {
-  background: rgba(255,255,255,0.97);
+  background: rgba(255, 255, 255, 0.97);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
   max-width: 800px;
   width: 100%;
   padding: 2.5rem 2rem 2rem 2rem;
@@ -70,10 +79,12 @@ const news = computed(() => newsList.find(n => n.id === Number(route.params.id))
   flex-direction: column;
   align-items: center;
 }
+
 .news-detail-logo {
   width: 60px;
   margin-bottom: 1.2rem;
 }
+
 .news-detail-title {
   font-size: 2rem;
   color: #003366;
@@ -81,6 +92,7 @@ const news = computed(() => newsList.find(n => n.id === Number(route.params.id))
   margin-bottom: 1rem;
   text-align: center;
 }
+
 .news-detail-meta {
   color: #222;
   font-size: 1.08rem;
@@ -90,18 +102,22 @@ const news = computed(() => newsList.find(n => n.id === Number(route.params.id))
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .news-detail-source {
   font-weight: bold;
 }
+
 .news-detail-date {
   color: #888;
 }
+
 .news-detail-img {
   width: 100%;
   max-width: 420px;
   border-radius: 12px;
   margin-bottom: 1.5rem;
 }
+
 .news-detail-content {
   font-size: 1.13rem;
   color: #222;
@@ -109,16 +125,32 @@ const news = computed(() => newsList.find(n => n.id === Number(route.params.id))
   margin-bottom: 2rem;
   text-align: left;
 }
+
 .news-detail-back {
-  color: #1976d2;
-  text-decoration: underline;
+  color: #fff;
+  background: linear-gradient(90deg, #1976d2 0%, #2563eb 100%);
+  border: none;
+  border-radius: 8px;
   font-size: 1.08rem;
+  font-weight: 500;
+  padding: 10px 28px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 8px;
   align-self: flex-end;
 }
+
+.news-detail-back:hover {
+  background: linear-gradient(90deg, #2563eb 0%, #1976d2 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
+}
+
 .news-detail-notfound {
   color: #c00;
   font-size: 1.3rem;
   text-align: center;
   margin-top: 4rem;
 }
-</style> 
+</style>

@@ -2,7 +2,7 @@
     <div class="scroll-wrapper">
         <div class="hours">
             <div class="title-row">
-                <img src="public\images\clock.png" alt="時鐘" />
+                <!-- <img src="public\images\clock.png" alt="時鐘" /> -->
                 <h1>開放時間</h1>
             </div>
             <ul>

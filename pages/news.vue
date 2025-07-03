@@ -1,8 +1,5 @@
 <template>
-  <InfoListPage
-    title="最新消息"
-    :items="items"
-  />
+  <InfoListPage title="最新消息" :items="items" />
 </template>
 
 <script setup>
