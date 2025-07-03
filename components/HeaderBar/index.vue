@@ -1,7 +1,10 @@
 <template>
   <header class="nlpi-header">
     <div class="nlpi-header-main">
-      <img src="/public/images/timelogo.png" alt="Time Library Logo" class="nlpi-logo" />
+      <!-- 返回首頁按鈕 -->
+      <NuxtLink to="/" class="nlpi-logo-link">
+        <img src="/public/images/timelogo.png" alt="NLPI Logo" class="nlpi-logo" />
+      </NuxtLink>
 
       <div class="nlpi-header-right">
         <!-- 漢堡按鈕 -->
@@ -106,8 +109,8 @@
               <div>
                 <a href="#" @click.prevent="toggleSubMenu('borrow')">借閱服務 ▸</a>
                 <div v-if="submenuStates.borrow" class="submenu">
-                  <NuxtLink to="/borrow/borrow-search">借書查詢</NuxtLink>
-                  <NuxtLink to="/borrow/borrow-record">我要借書</NuxtLink>
+                  <NuxtLink to="/borrow/borrow-search">借書查詢(測試用)</NuxtLink>
+                  <NuxtLink to="/borrow/borrow-record">我要借書(測試用)</NuxtLink>
                   <NuxtLink to="/borrow/borrow-continue">我要續借</NuxtLink>
                 </div>
               </div>
