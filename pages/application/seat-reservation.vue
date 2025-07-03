@@ -3,7 +3,7 @@
         <LoginRequiredPrompt v-if="!isLoggedIn" message="您需要登入才能預約座位" />
         <div v-else class="library-card">
             <div class="title-row">
-                <img src="/images/libraryCard.jpg" alt="借閱證圖片" />
+                <!-- <img src="/images/libraryCard.jpg" alt="借閱證圖片" /> -->
                 <h1>自習座位預約</h1>
             </div>
 
