@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
+import { useAuth } from '~/composables/useAuth'
 
 const members = ref([])
 const loading = ref(true)
@@ -16,6 +17,8 @@ const selectedMember = ref(null)
 const editAddressCounty = ref('')
 const editAddressTown = ref('')
 const editAddressDetail = ref('')
+
+const { user } = useAuth()
 
 const fetchMembers = async () => {
   loading.value = true
@@ -79,51 +82,56 @@ async function saveMemberDetail() {
 </script>
 
 <template>
-  <div class="p-8">
-    <h2 class="text-2xl font-bold mb-4">會員管理</h2>
-    <div>
-      每頁顯示：
-      <select v-model="itemsPerPage">
-        <option :value="20">20 筆</option>
-        <option :value="50">50 筆</option>
-      </select>
-    </div>
+  <div v-if="user && user.role === 'admin'">
+    <div class="p-8">
+      <h2 class="text-2xl font-bold mb-4">會員管理</h2>
+      <div>
+        每頁顯示：
+        <select v-model="itemsPerPage">
+          <option :value="20">20 筆</option>
+          <option :value="50">50 筆</option>
+        </select>
+      </div>
 
-    <div v-if="loading">載入中...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <table v-else class="min-w-full border">
-      <thead>
-        <tr>
-          <th class="border px-2 py-1">ID</th>
-          <th class="border px-2 py-1">姓名</th>
-          <th class="border px-2 py-1">性別</th>
-          <th class="border px-2 py-1">信箱</th>
-          <th class="border px-2 py-1">電話</th>
-          <th class="border px-2 py-1">居住地</th>
-          <th class="border px-2 py-1">詳細資料</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="member in members" :key="member.id">
-          <td class="border px-2 py-1">{{ member.id }}</td>
-          <td class="border px-2 py-1">{{ member.name }}</td>
-          <td class="border px-2 py-1">{{ member.gender }}</td>
-          <td class="border px-2 py-1">{{ member.email }}</td>
-          <td class="border px-2 py-1">{{ member.phone }}</td>
-          <td class="border px-2 py-1">
-            {{ member.addressCounty }}{{ member.addressTown }}{{ member.addressDetail }}
-          </td>
-          <td class="border px-2 py-1">
-            <NuxtLink :to="`/member/${member.id}`" class="bg-blue-500 text-white px-4 py-2 rounded">詳細資料</NuxtLink>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div>
-      <button :disabled="currentPage === 1" @click="currentPage--">上一頁</button>
-      <span>第 {{ currentPage }} / {{ totalPages }} 頁</span>
-      <button :disabled="currentPage === totalPages" @click="currentPage++">下一頁</button>
+      <div v-if="loading">載入中...</div>
+      <div v-else-if="error">{{ error }}</div>
+      <table v-else class="min-w-full border">
+        <thead>
+          <tr>
+            <th class="border px-2 py-1">ID</th>
+            <th class="border px-2 py-1">姓名</th>
+            <th class="border px-2 py-1">性別</th>
+            <th class="border px-2 py-1">信箱</th>
+            <th class="border px-2 py-1">電話</th>
+            <th class="border px-2 py-1">居住地</th>
+            <th class="border px-2 py-1">詳細資料</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="member in members" :key="member.id">
+            <td class="border px-2 py-1">{{ member.id }}</td>
+            <td class="border px-2 py-1">{{ member.name }}</td>
+            <td class="border px-2 py-1">{{ member.gender }}</td>
+            <td class="border px-2 py-1">{{ member.email }}</td>
+            <td class="border px-2 py-1">{{ member.phone }}</td>
+            <td class="border px-2 py-1">
+              {{ member.addressCounty }}{{ member.addressTown }}{{ member.addressDetail }}
+            </td>
+            <td class="border px-2 py-1">
+              <NuxtLink :to="`/member/${member.id}`" class="bg-blue-500 text-white px-4 py-2 rounded">詳細資料</NuxtLink>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <button :disabled="currentPage === 1" @click="currentPage--">上一頁</button>
+        <span>第 {{ currentPage }} / {{ totalPages }} 頁</span>
+        <button :disabled="currentPage === totalPages" @click="currentPage++">下一頁</button>
+      </div>
     </div>
+  </div>
+  <div v-else>
+    <p>您沒有權限瀏覽此頁面。</p>
   </div>
 </template>
 

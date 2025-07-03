@@ -1,5 +1,5 @@
 <template>
-    <div class="violation-page">
+    <div v-if="user && user.role === 'admin'" class="violation-page">
         <h2 class="page-title">📚 所有違規紀錄</h2>
 
         <!-- 載入中狀態 -->
@@ -44,12 +44,16 @@
         <CustomAlert :show="customAlert.show" :title="customAlert.title" :message="customAlert.message"
             @close="closeAlert" />
     </div>
+    <div v-else>
+        <p>您沒有權限瀏覽此頁面。</p>
+    </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import CustomAlert from '~/components/CustomAlert.vue'
+import { useAuth } from '~/composables/useAuth'
 
 const records = ref([])
 const loading = ref(true)
@@ -61,6 +65,8 @@ const customAlert = ref({
     title: '',
     message: ''
 })
+
+const { user } = useAuth()
 
 const showAlert = (title, message) => {
     customAlert.value = { show: true, title, message }

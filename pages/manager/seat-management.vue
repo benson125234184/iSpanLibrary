@@ -1,34 +1,41 @@
 <template>
-    <div>
-        <h1>座位管理</h1>
-        <div class="seat-list">
-            <div v-for="seat in seats" :key="seat.seatLabel" class="seat-item">
-                <img :src="getSeatImage(seat.status)" alt="seat icon" class="seat-icon"
-                    :title="seat.hasReservation ? '已有預約，無法恢復為可用' : ''" />
-                <span class="label">{{ seat.seatLabel }}</span>
-                <span :class="seat.status.toLowerCase()">{{ seat.status }}</span>
+    <div v-if="user && user.role === 'admin'">
+        <div>
+            <h1>座位管理</h1>
+            <div class="seat-list">
+                <div v-for="seat in seats" :key="seat.seatLabel" class="seat-item">
+                    <img :src="getSeatImage(seat.status)" alt="seat icon" class="seat-icon"
+                        :title="seat.hasReservation ? '已有預約，無法恢復為可用' : ''" />
+                    <span class="label">{{ seat.seatLabel }}</span>
+                    <span :class="seat.status.toLowerCase()">{{ seat.status }}</span>
 
-                <!-- 標記損壞 -->
-                <button v-if="seat.status !== 'BROKEN'" @click="markAsBroken(seat.seatLabel)">
-                    標記損壞
-                </button>
+                    <!-- 標記損壞 -->
+                    <button v-if="seat.status !== 'BROKEN'" @click="markAsBroken(seat.seatLabel)">
+                        標記損壞
+                    </button>
 
-                <!-- 恢復可用（禁用狀態處理） -->
-                <button v-if="seat.status === 'BROKEN'" @click="markAsAvailable(seat.seatLabel)"
-                    :disabled="seat.hasReservation" :title="seat.hasReservation ? '此座位已有預約，無法恢復' : ''">
-                    恢復可用
-                    <span v-if="seat.hasReservation">🔒</span>
-                </button>
+                    <!-- 恢復可用（禁用狀態處理） -->
+                    <button v-if="seat.status === 'BROKEN'" @click="markAsAvailable(seat.seatLabel)"
+                        :disabled="seat.hasReservation" :title="seat.hasReservation ? '此座位已有預約，無法恢復' : ''">
+                        恢復可用
+                        <span v-if="seat.hasReservation">🔒</span>
+                    </button>
+                </div>
             </div>
         </div>
+    </div>
+    <div v-else>
+        <p>您沒有權限瀏覽此頁面。</p>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { eventBus } from '@/utils/event-bus'
+import { useAuth } from '~/composables/useAuth'
 
 const seats = ref([])
+const { user } = useAuth()
 
 onMounted(() => {
     loadSeats()

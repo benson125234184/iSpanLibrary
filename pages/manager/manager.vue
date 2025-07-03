@@ -20,11 +20,11 @@ const router = useRouter()
                         帳號資訊
                     </button>
                 </NuxtLink>
-                <NuxtLink to="/manager/violations">
+                <!-- <NuxtLink to="/manager/violations">
                     <button class="px-6 py-3 bg-primary text-white rounded-lg shadow hover:bg-primary/80 transition">
                         違規紀錄
                     </button>
-                </NuxtLink>
+                </NuxtLink> -->
                 <NuxtLink to="/manager/feedback">
                     <button class="px-6 py-3 bg-primary text-white rounded-lg shadow hover:bg-primary/80 transition">
                         意見回覆

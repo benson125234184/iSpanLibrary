@@ -5,7 +5,13 @@ import { ref } from 'vue'
 const getStoredUser = () => {
   try {
     const stored = localStorage.getItem('user')
-    return stored ? JSON.parse(stored) : null
+    const role = localStorage.getItem('user_role')
+    if (stored) {
+      const userObj = JSON.parse(stored)
+      // 合併 role
+      return { ...userObj, role: role || 'member' }
+    }
+    return null
   } catch (e) {
     console.error('解析用戶資訊失敗：', e)
     return null
