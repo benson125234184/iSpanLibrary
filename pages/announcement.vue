@@ -1,8 +1,5 @@
 <template>
-  <InfoListPage
-    title="公告事項"
-    :items="items"
-  />
+  <InfoListPage title="公告事項" :items="items" />
 </template>
 <script setup>
 import InfoListPage from '~/components/InfoListPage.vue'
@@ -32,4 +29,4 @@ const items = computed(() =>
     link: `/announcement/${n.id}`
   }))
 )
-</script> 
+</script>

@@ -2,7 +2,7 @@
     <div class="scroll-wrapper">
         <div class="audience">
             <div class="title-row">
-                <img src="/public/images/libraryLogo.png" alt="讀者" />
+                <!-- <img src="/public/images/libraryLogo.png" alt="讀者" /> -->
                 <h1>服務對象</h1>
             </div>
             <img src="public\images\16.jpg" alt="圖書館讀者" />

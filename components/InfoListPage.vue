@@ -10,12 +10,7 @@
       <div v-for="(item, idx) in items" :key="item.id" class="info-list-news-item">
         <div class="news-title-row">
           <span class="news-title">
-            <template v-if="idx < 3">
-              <NuxtLink :to="`/news-detail/${item.id}`">{{ item.title }}</NuxtLink>
-            </template>
-            <template v-else>
-              {{ item.title }}
-            </template>
+            <NuxtLink :to="`/news-detail/${item.id}`">{{ item.title }}</NuxtLink>
           </span>
           <span class="news-date">{{ item.date }}</span>
         </div>
@@ -49,20 +44,23 @@ watch(() => props.activeTab, () => {
   min-height: 100vh;
   padding: 40px 0 40px 0;
 }
+
 .info-list-banner {
   width: 100%;
   max-height: 260px;
   object-fit: cover;
   display: block;
 }
+
 .info-list-card {
   max-width: 900px;
   margin: 0 auto;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
   padding: 2.5rem 2rem 2rem 2rem;
 }
+
 .info-list-header-row {
   display: flex;
   justify-content: space-between;
@@ -71,6 +69,7 @@ watch(() => props.activeTab, () => {
   padding-bottom: 0.9rem;
   margin-bottom: 0.5rem;
 }
+
 .header-title {
   font-size: 1.18rem;
   color: #003366;
@@ -79,6 +78,7 @@ watch(() => props.activeTab, () => {
   padding-left: 16px;
   letter-spacing: 2px;
 }
+
 .header-date {
   font-size: 1.13rem;
   color: #003366;
@@ -86,61 +86,75 @@ watch(() => props.activeTab, () => {
   margin-left: 1.5rem;
   letter-spacing: 1px;
 }
+
 .info-list-news-item {
   padding: 1.2rem 0;
   border-bottom: 1px solid #dbe4ee;
 }
+
 .info-list-news-item:last-child {
   border-bottom: none;
 }
+
 .news-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 }
+
 .news-title {
   font-size: 1.13rem;
   color: #222;
   font-weight: 500;
   word-break: break-all;
 }
+
 .news-date {
   font-size: 1rem;
   color: #888;
   margin-left: 1.5rem;
   white-space: nowrap;
 }
+
 .news-title a {
   color: #555;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.18s;
 }
+
 .news-title a:hover {
   color: #1976d2;
 }
+
 @media (max-width: 900px) {
   .info-list-card {
     padding: 1.2rem 0.5rem 1.5rem 0.5rem;
   }
+
   .info-list-header-row {
     padding-bottom: 0.6rem;
   }
+
   .header-title {
     font-size: 1rem;
     padding-left: 10px;
   }
+
   .header-date {
     font-size: 0.98rem;
   }
+
   .news-title {
     font-size: 1rem;
   }
+
   .news-date {
     font-size: 0.95rem;
   }
 }
+
 .info-list-title-main {
   text-align: center;
   font-size: 2rem;
@@ -153,4 +167,4 @@ watch(() => props.activeTab, () => {
   margin-left: auto;
   margin-right: auto;
 }
-</style> 
+</style>

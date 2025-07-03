@@ -2,7 +2,7 @@
     <div class="scroll-wrapper">
         <div class="location">
             <div class="title-row">
-                <img src="public\images\car.png" alt="Logo" />
+                <!-- <img src="public\images\car.png" alt="Logo" /> -->
                 <h1>本館位置</h1>
             </div>
             <div id="map"></div>

@@ -62,7 +62,7 @@
               <NuxtLink to="/event">活動訊息</NuxtLink>
             </div>
           </div>
-          <div class="nlpi-nav-link nav-dropdown" @mouseenter="showDigitalMenu = true"
+          <!-- <div class="nlpi-nav-link nav-dropdown" @mouseenter="showDigitalMenu = true"
             @mouseleave="showDigitalMenu = false">
             <span class="nav-label">電子資源</span>
             <div v-if="showDigitalMenu" class="dropdown-menu">
@@ -70,7 +70,7 @@
               <NuxtLink to="#">電子期刊</NuxtLink>
               <NuxtLink to="#">多媒體資源</NuxtLink>
             </div>
-          </div>
+          </div> -->
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showReaderMenu = true"
             @mouseleave="showReaderMenu = false">
             <span class="nav-label">讀者服務</span>

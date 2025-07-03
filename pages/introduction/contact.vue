@@ -2,7 +2,7 @@
     <div class="scroll-wrapper">
         <div class="contact">
             <div class="title-row">
-                <img src="/public/images/libraryLogo.png" alt="Logo" />
+                <!-- <img src="/public/images/libraryLogo.png" alt="Logo" /> -->
                 <h1>聯絡我們</h1>
             </div>
 

@@ -11,7 +11,7 @@
           <img :src="newsList[0].img" :alt="newsList[0].title" class="news-img-large" />
           <div class="news-info-large">
             <h3 class="news-item-title-large">
-              <NuxtLink :to="`/news-detail/${newsList[0].id}`" target="_blank" rel="noopener">{{ newsList[0].title }}</NuxtLink>
+              <NuxtLink :to="`/news-detail/${newsList[0].id}`">{{ newsList[0].title }}</NuxtLink>
             </h3>
             <div class="news-date-large">{{ newsList[0].date }}</div>
             <div class="news-desc-large">{{ newsList[0].desc }}</div>
@@ -24,11 +24,11 @@
           <img :src="news.img" :alt="news.title" class="news-img-small" />
           <div class="news-info-small">
             <h3 class="news-item-title-small">
-              <NuxtLink :to="`/news-detail/${news.id}`" target="_blank" rel="noopener">{{ news.title }}</NuxtLink>
+              <NuxtLink :to="`/news-detail/${news.id}`">{{ news.title }}</NuxtLink>
             </h3>
             <div class="news-date-small">{{ news.date }}</div>
             <div class="news-desc-small">{{ news.descShort }}</div>
-            <NuxtLink :to="`/news-detail/${news.id}`" class="news-read-more-btn" target="_blank" rel="noopener">查看更多</NuxtLink>
+            <NuxtLink :to="`/news-detail/${news.id}`" class="news-read-more-btn">查看更多</NuxtLink>
           </div>
         </div>
       </div>
