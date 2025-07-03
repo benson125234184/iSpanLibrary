@@ -83,7 +83,7 @@
         <div class="catalog-icon"></div>
         <div class="catalog-title">館藏查詢系統</div>
         <div class="catalog-desc">查詢書目／借閱紀錄<br>書目預約／辦理續借</div>
-        <a href="#" class="catalog-btn">前往查詢</a>
+        <a href="/catalogue-search" class="catalog-btn">前往查詢</a>
       </div>
     </section>
   </div>
