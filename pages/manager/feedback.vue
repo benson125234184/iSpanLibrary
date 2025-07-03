@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6">
+    <div v-if="user && user.role === 'admin'" class="p-6">
         <h2 class="text-xl font-bold mb-4">意見信箱留言管理</h2>
 
         <table class="w-full border border-gray-300 mb-6">
@@ -38,16 +38,21 @@
             </div>
         </div>
     </div>
+    <div v-else>
+        <p>您沒有權限瀏覽此頁面。</p>
+    </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { replyFeedback, getAllFeedback } from '@/composables/useFeedbackApi'
+import { useAuth } from '~/composables/useAuth'
 
 const feedbackList = ref([])
 const showReplyModal = ref(false)
 const selectedItem = ref(null)
 const replyContent = ref('')
+const { user } = useAuth()
 
 const openReply = (item) => {
     selectedItem.value = item

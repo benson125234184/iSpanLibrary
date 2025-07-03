@@ -314,9 +314,13 @@
               </svg>
             </div>
             <div class="user-info">
-              <div class="user-name">{{ userInfo.name }}</div>
-              <div class="user-email">{{ userInfo.email }}</div>
-              <div class="user-role">{{ userInfo.role === 'admin' ? '管理者' : '會員' }}</div>
+              <div class="user-name">
+                {{ userInfo.name }}
+                <span class="user-role-label">
+                  {{ userInfo.role === 'admin' ? '管理員' : '會員' }}
+                </span>
+              </div>
+              <div class="user-email" v-if="userInfo.role !== 'admin'">{{ userInfo.email }}</div>
             </div>
           </div>
           <div class="user-menu-body">
@@ -331,6 +335,10 @@
             <button class="user-menu-item" @click="navigateToReservationRecord">
               <span class="menu-icon">📅</span>
               預約紀錄
+            </button>
+            <button class="user-menu-item" v-if="userInfo.role === 'admin'" @click="navigateToManagerPage">
+              <span class="menu-icon">🛠️</span>
+              管理員介面
             </button>
             <div class="user-menu-divider"></div>
             <button class="user-menu-item user-menu-logout" @click="logout">
@@ -463,6 +471,7 @@ function checkLoginStatus() {
       const userData = JSON.parse(user)
       isLoggedIn.value = true
       userInfo.value = {
+        id: userData.id || userData.user_id,
         name: userData.name || userData.email || '會員',
         email: userData.email,
         role: userRole || 'member'
@@ -505,7 +514,7 @@ function logout() {
 function navigateToMemberPage() {
   showUserMenu.value = false
   showServicePopup.value = false
-  router.push('/member/profile')
+  router.push(`/member/${userInfo.value.id || userInfo.value.user_id}`)
 }
 
 // 導航到借閱紀錄
@@ -521,6 +530,11 @@ function navigateToReservationRecord() {
   router.push('/reserve/reservation-record')
 }
 
+function navigateToManagerPage() {
+  showUserMenu.value = false
+  router.push('/manager/manager')
+}
+
 async function handleLogin() {
   if (!loginForm.value.email || !loginForm.value.password) {
     showCustomAlert('登入錯誤', '請輸入電子郵件和密碼')
@@ -530,8 +544,9 @@ async function handleLogin() {
   isLoggingIn.value = true
 
   try {
-    // 檢查是否為管理者帳號
-    const isAdminAccount = loginForm.value.email.toLowerCase() === 'rtny2cpPlzONBEQ55boMSA9Ze@ispnlibrary.com'
+    // 檢查是否為管理者帳號（修正：小寫+去空白）
+    const adminEmail = 'rtny2cpplzonbeq55bmsa9ze@ispnlibrary.com'
+    const isAdminAccount = loginForm.value.email.trim().toLowerCase() === adminEmail
 
     // 一般會員登入
     const res = await axios.post('http://localhost:8080/api/auth/login', {
@@ -549,6 +564,7 @@ async function handleLogin() {
     localStorage.setItem('jwt_token', token)
     localStorage.setItem('user', JSON.stringify(user))
     localStorage.setItem('user_role', userRole)
+    console.log('user_role set:', userRole)
 
     // 關閉登入視窗
     closeLoginModal()
@@ -556,10 +572,12 @@ async function handleLogin() {
     // 更新用戶狀態
     isLoggedIn.value = true
     userInfo.value = {
+      id: user.id || user.user_id,
       name: user.name || user.email || '會員',
       email: user.email,
-      role: user
+      role: userRole
     }
+    console.log('userInfo after login:', userInfo.value)
     currentUser.value = user //讓<div v-if="currentUser"> 即時顯示，不需刷新。
 
     // 顯示登入成功訊息
@@ -1482,5 +1500,17 @@ const toggleMobileMenu = () => {
 .mega-fade-enter-from,
 .mega-fade-leave-to {
   opacity: 0;
+}
+
+.user-role-label {
+  display: inline-block;
+  margin-left: 0.7em;
+  font-size: 13px;
+  background: #e3eaf6;
+  color: #003366;
+  border-radius: 10px;
+  padding: 2px 10px;
+  font-weight: 500;
+  vertical-align: middle;
 }
 </style>

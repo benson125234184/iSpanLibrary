@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import axios from 'axios'
+import { useAuth } from '~/composables/useAuth'
 
 const books = ref([])
 const loading = ref(true)
@@ -9,6 +10,7 @@ const itemsPerPage = ref(20)
 const currentPage = ref(1)
 const totalPages = ref(1)
 const totalElements = ref(0)
+const { user } = useAuth()
 
 const fetchBooks = async () => {
   loading.value = true
@@ -40,60 +42,65 @@ watch([itemsPerPage, currentPage], fetchBooks)
 </script>
 
 <template>
-  <div class="p-8">
-    <h2 class="text-2xl font-bold mb-4">書籍管理</h2>
-    <div class="mb-4">
-      每頁顯示：
-      <select v-model="itemsPerPage">
-        <option :value="20">20 筆</option>
-        <option :value="50">50 筆</option>
-      </select>
+  <div v-if="user && user.role === 'admin'">
+    <div class="p-8">
+      <h2 class="text-2xl font-bold mb-4">書籍管理</h2>
+      <div class="mb-4">
+        每頁顯示：
+        <select v-model="itemsPerPage">
+          <option :value="20">20 筆</option>
+          <option :value="50">50 筆</option>
+        </select>
+      </div>
+      <div v-if="loading">載入中...</div>
+      <div v-else-if="error">{{ error }}</div>
+      <table v-else class="min-w-full border">
+        <thead>
+          <tr>
+            <th class="border px-2 py-1">書籍編號</th>
+            <th class="border px-2 py-1">ISBN</th>
+            <th class="border px-2 py-1">書名</th>
+            <th class="border px-2 py-1">作者</th>
+            <th class="border px-2 py-1">出版社</th>
+            <th class="border px-2 py-1">出版日期</th>
+            <th class="border px-2 py-1">狀態</th>
+            <th class="border px-2 py-1">詳細資料</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="book in books" :key="book.book_id">
+            <td class="border px-2 py-1">{{ book.book_id }}</td>
+            <td class="border px-2 py-1">{{ book.isbn }}</td>
+            <td class="border px-2 py-1">{{ book.title }}</td>
+            <td class="border px-2 py-1">{{ book.author }}</td>
+            <td class="border px-2 py-1">{{ book.publisher }}</td>
+            <td class="border px-2 py-1">{{ book.publishdate }}</td>
+            <td class="border px-2 py-1">
+              <span v-if="book.is_available" class="text-green-600">在架</span>
+              <span v-else class="text-red-600">借出</span>
+            </td>
+            <td class="border px-2 py-1">
+              <button class="bg-blue-500 text-white px-4 py-2 rounded">詳細資料</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-4 flex items-center gap-4">
+        <button :disabled="currentPage === 1" @click="currentPage--"
+          class="px-3 py-1 border rounded disabled:opacity-50 disabled:cursor-not-allowed">
+          上一頁
+        </button>
+        <span>第 {{ currentPage }} / {{ totalPages }} 頁</span>
+        <button :disabled="currentPage === totalPages" @click="currentPage++"
+          class="px-3 py-1 border rounded disabled:opacity-50 disabled:cursor-not-allowed">
+          下一頁
+        </button>
+        <span>共 {{ totalElements }} 筆</span>
+      </div>
     </div>
-    <div v-if="loading">載入中...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <table v-else class="min-w-full border">
-      <thead>
-        <tr>
-          <th class="border px-2 py-1">書籍編號</th>
-          <th class="border px-2 py-1">ISBN</th>
-          <th class="border px-2 py-1">書名</th>
-          <th class="border px-2 py-1">作者</th>
-          <th class="border px-2 py-1">出版社</th>
-          <th class="border px-2 py-1">出版日期</th>
-          <th class="border px-2 py-1">狀態</th>
-          <th class="border px-2 py-1">詳細資料</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="book in books" :key="book.book_id">
-          <td class="border px-2 py-1">{{ book.book_id }}</td>
-          <td class="border px-2 py-1">{{ book.isbn }}</td>
-          <td class="border px-2 py-1">{{ book.title }}</td>
-          <td class="border px-2 py-1">{{ book.author }}</td>
-          <td class="border px-2 py-1">{{ book.publisher }}</td>
-          <td class="border px-2 py-1">{{ book.publishdate }}</td>
-          <td class="border px-2 py-1">
-            <span v-if="book.is_available" class="text-green-600">在架</span>
-            <span v-else class="text-red-600">借出</span>
-          </td>
-          <td class="border px-2 py-1">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded">詳細資料</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="mt-4 flex items-center gap-4">
-      <button :disabled="currentPage === 1" @click="currentPage--"
-        class="px-3 py-1 border rounded disabled:opacity-50 disabled:cursor-not-allowed">
-        上一頁
-      </button>
-      <span>第 {{ currentPage }} / {{ totalPages }} 頁</span>
-      <button :disabled="currentPage === totalPages" @click="currentPage++"
-        class="px-3 py-1 border rounded disabled:opacity-50 disabled:cursor-not-allowed">
-        下一頁
-      </button>
-      <span>共 {{ totalElements }} 筆</span>
-    </div>
+  </div>
+  <div v-else>
+    <p>您沒有權限瀏覽此頁面。</p>
   </div>
 </template>
 
