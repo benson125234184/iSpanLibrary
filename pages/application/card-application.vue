@@ -546,7 +546,7 @@ function clearSavedForm() {
     flex: 1;
     max-width: 1000px;
     /* max-height: 1000px; */
-    margin: 0 auto;
+    margin: 3rem auto;
     padding: 0 10px 20px;
     display: flex;
     flex-direction: column;
@@ -675,6 +675,7 @@ a:hover {
     font-weight: bold;
     margin-right: 12px;
     text-align: right;
+    font-size: larger;
 }
 
 .form-group input,
@@ -687,17 +688,26 @@ a:hover {
     min-width: 200px;
 }
 
+.form-group-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-left: 5rem;
+    margin: 0 auto 2rem;
+}
+
 .education-row {
     display: flex;
     align-items: flex-start;
     margin-bottom: 1.5rem;
 }
 
+/* 
 .form-label {
     width: 80px;
     font-weight: bold;
     margin-top: 0.3rem;
-}
+} */
 
 .gender-radio {
     display: flex;

@@ -5,8 +5,8 @@
     <div v-if="!step">
       <div style="margin-bottom: 2.5rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem;">
         <div class="feature-header">
-          <span style="font-size: 2rem; margin-right: 0.5rem;">📚</span>
-          讀者書評
+          <span style="font-size: 2rem; margin-right: 0.5rem;">📚 讀者書評</span>
+
         </div>
         <div class="feature-subtitle">功能總覽</div>
       </div>
@@ -255,6 +255,10 @@
   margin-bottom: 0.5rem;
   font-size: 2rem;
   font-weight: bold;
+}
+
+.feature-header span {
+  margin-top: 1rem;
 }
 
 .feature-subtitle {

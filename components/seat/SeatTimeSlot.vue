@@ -71,12 +71,13 @@ const isSlotDisabled = (slot) => {
 <style scoped>
 .seat-time-slot {
     margin-bottom: 1rem;
+    margin-left: 4rem;
 }
 
 .options {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.5rem;
     margin-top: 0.5rem;
 }
 
@@ -84,7 +85,7 @@ const isSlotDisabled = (slot) => {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 16px;
+    font-size: 1.5rem;
 }
 
 .time-option.disabled {

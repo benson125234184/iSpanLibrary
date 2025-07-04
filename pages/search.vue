@@ -58,6 +58,10 @@ watch(() => route.query.keyword, async (newKeyword) => {
     text-align: center;
 }
 
+h2 {
+    margin-top: 0;
+}
+
 .search {
     display: flex;
     align-items: center;

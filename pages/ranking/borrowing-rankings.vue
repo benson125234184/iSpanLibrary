@@ -155,6 +155,11 @@
 </template>
 
 <style scoped>
+h1 {
+  margin-top: 0;
+  padding-top: 3rem;
+}
+
 .rankings-container {
   padding: 0 2rem;
 }

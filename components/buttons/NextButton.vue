@@ -14,12 +14,17 @@ const emit = defineEmits(['next'])
 
 <style>
 .next-button {
-    margin-bottom: 1rem;
-    margin-left: 5rem;
-    padding: 8px 14px;
-    background-color: lightgray;
-    border: 1px solid #999;
+    background-color: #007bff;
+    margin-left: 6rem;
+    color: white;
+    padding: 10px;
+    border: none;
     border-radius: 6px;
+    font-size: 1rem;
     cursor: pointer;
+}
+
+.next-button:hover {
+    background-color: #0056b3;
 }
 </style>
