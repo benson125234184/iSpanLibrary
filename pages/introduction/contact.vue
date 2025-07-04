@@ -155,6 +155,7 @@
     font-size: 2rem;
     color: #003366;
     text-align: center;
+    margin-top: 3rem;
 }
 
 .department-section {

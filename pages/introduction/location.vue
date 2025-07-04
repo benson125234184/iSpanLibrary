@@ -103,6 +103,7 @@ onMounted(() => {
 .title-row h1 {
     margin: 0;
     font-size: 2rem;
+    margin-top: 3rem;
 }
 
 ::v-deep(.leaflet-popup-content-wrapper) {

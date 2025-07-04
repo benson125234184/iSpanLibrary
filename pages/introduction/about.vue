@@ -73,16 +73,13 @@
     /* 圖片與文字間距 */
 }
 
-.title-row img {
-    width: 50px;
-    height: auto;
-}
 
 .title-row h1 {
     margin: 0;
     font-size: 2rem;
     color: #003366;
     text-align: center;
+    margin-top: 3rem;
 }
 
 .description {

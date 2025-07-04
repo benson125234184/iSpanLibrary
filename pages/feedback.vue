@@ -2,7 +2,6 @@
     <div class="scroll-wrapper">
         <div class="feedback">
             <div class="title-row">
-                <img src="/images/libraryCard.jpg" alt="借閱證圖片" />
                 <h1>意見信箱</h1>
             </div>
             <h1 class="section-title"> {{
@@ -259,14 +258,10 @@ const submitForm = async () => {
     /* 圖片與文字間距 */
 }
 
-.title-row img {
-    width: 50px;
-    height: auto;
-}
-
 .title-row h1 {
     margin: 0;
     font-size: 2rem;
+    margin-top: 3rem;
 }
 
 .section-title {
@@ -362,6 +357,7 @@ a:hover {
     font-weight: bold;
     margin-right: 12px;
     text-align: right;
+    font-size: larger;
 }
 
 .form-group input,
@@ -470,6 +466,7 @@ a:hover {
     width: 80px;
     font-weight: bold;
     margin-top: 0.3rem;
+    font-size: larger;
 }
 
 

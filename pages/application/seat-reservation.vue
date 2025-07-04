@@ -299,6 +299,21 @@ const cancelReservationByLabel = async (resv) => {
 </script>
 
 <style scoped>
+.summary-btn {
+    background-color: coral;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 5rem;
+}
+
+.summary-btn:hover {
+    background-color: #c0392b;
+}
+
 .cancel-btn {
     background-color: coral;
     color: white;
@@ -308,6 +323,10 @@ const cancelReservationByLabel = async (resv) => {
     cursor: pointer;
     font-size: 16px;
     margin-bottom: 5rem;
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b;
 }
 
 .secondary-btn {
@@ -324,9 +343,6 @@ const cancelReservationByLabel = async (resv) => {
     border-radius: 6px;
 }
 
-.cancel-btn:hover {
-    background-color: #c0392b;
-}
 
 .loading-spinner {
     border: 6px solid #f3f3f3;
@@ -411,6 +427,7 @@ const cancelReservationByLabel = async (resv) => {
 .title-row h1 {
     margin: 0;
     font-size: 2rem;
+    margin-top: 3rem;
 }
 
 .section-title {

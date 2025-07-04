@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="form-group textarea-wrapper">
-                        <label class="form-label-reason">推薦原因：</label>
+                        <label class="form-label reason">推薦原因：</label>
                         <div class="textarea-container">
                             <textarea v-model="form.reason" required rows="6" maxlength="1000"></textarea>
                             <span class="word-counter">{{ form.reason.length }}/1000</span>
@@ -402,6 +402,7 @@ const submitForm = async () => {
 .title-row h1 {
     margin: 0;
     font-size: 2rem;
+    margin-top: 3rem;
 }
 
 .section-title {
@@ -569,6 +570,7 @@ a:hover {
     font-weight: bold;
     margin-right: 12px;
     text-align: right;
+    font-size: larger;
 }
 
 .form-group input,
@@ -607,7 +609,7 @@ a:hover {
 .textarea-container {
     position: relative;
     flex: 1;
-
+    margin-left: 1rem;
 }
 
 .textarea-container textarea {
@@ -677,8 +679,12 @@ a:hover {
     width: 80px;
     font-weight: bold;
     margin-top: 0.3rem;
+    font-size: larger;
 }
 
+.form-label.reason {
+    text-wrap: nowrap;
+}
 
 label {
     display: block;

@@ -693,6 +693,11 @@ body {
   /* Chrome/Safari/Edge */
 }
 
+.container h1 {
+  text-align: center;
+
+}
+
 .simple-search,
 .advanced-search {
   max-width: 100%;

@@ -702,6 +702,10 @@ const toggleMobileMenu = () => {
   border-left: 2px solid #ddd;
 }
 
+.nav-dropdown {
+  z-index: 9999;
+}
+
 .dropdown-menu a {
   display: block;
   padding: 6px 12px;
