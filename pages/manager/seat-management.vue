@@ -83,10 +83,16 @@ function getSeatImage(status) {
     }
 }
 
+const jwt = ref(localStorage.getItem('jwt_token') || '')
+
+
 async function markAsBroken(label) {
     try {
         const res = await fetch(`http://localhost:8080/api/seats/mark-broken/${label}`, {
-            method: 'PUT'
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${jwt.value}`
+            }
         })
         if (res.ok) {
             alert('✅ 已標記為損壞')
@@ -102,7 +108,10 @@ async function markAsBroken(label) {
 async function markAsAvailable(label) {
     try {
         const res = await fetch(`http://localhost:8080/api/seats/mark-available/${label}`, {
-            method: 'PUT'
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${jwt.value}`
+            }
         })
         if (res.ok) {
             alert('✅ 已恢復為可用')
