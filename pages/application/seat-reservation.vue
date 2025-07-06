@@ -33,10 +33,11 @@
             <!-- 顯示多筆即將到來的預約 -->
 
             <!-- Step 2：我的預約清單 -->
-            <div v-if="step === 2 && multipleReservations.length > 0" class="reservation-list"
-                style="margin-top: 20px;">
+            <div v-if="step === 2" class="reservation-list" style="margin-top: 20px;">
                 <h3 style="text-align: center;">📑 我的預約清單</h3>
-                <ul>
+
+                <!-- 如果有座位預約 -->
+                <ul v-if="multipleReservations.length > 0">
                     <li v-for="(resv, index) in multipleReservations" :key="index" class="reservation-item"
                         style="margin: 10px 0;">
                         <strong>{{ resv.reservationDate }}｜{{ resv.timeSlot }}</strong>｜座位：{{ resv.seatLabel }}
@@ -44,11 +45,19 @@
                     </li>
                 </ul>
 
-                <!-- 返回按鈕區塊 -->
+                <!-- 如果預約清單為空 -->
+                <div v-else style="text-align: center; margin-top: 20px;">
+                    <p>📭 尚無預約記錄</p>
+                </div>
+
+                <!-- 返回按鈕區塊 > 不論清單有無都顯示 -->
                 <div style="text-align: center; margin-top: 20px;">
                     <button @click="step = 1" class="cancel-btn">⬅ 返回預約</button>
-                    <button @click="step = 3" class="cancel-btn secondary-btn" style="margin-left: 10px;">🔁
-                        返回選座位</button>
+                    <!-- 僅在有預約時顯示 返回選座位 -->
+                    <button v-if="multipleReservations.length > 0" @click="step = 3" class="cancel-btn secondary-btn"
+                        style="margin-left: 10px;">
+                        🔁 返回選座位
+                    </button>
                 </div>
             </div>
 
@@ -210,7 +219,7 @@ const handleConfirmSeat = async (seatLabel) => {
             console.error(res.error.value)
         }
     } else {
-        step.value = 3
+        step.value = 4
         fetchExistingReservation()
     }
 }
