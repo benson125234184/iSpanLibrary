@@ -11,6 +11,7 @@ import { ref, onMounted } from 'vue'
 import HeaderBar from '@/components/HeaderBar/index.vue'
 import FooterBar from '@/components/FooterBar.vue'
 
+
 // const showInfoMenu = ref(false)
 // const showDigitalMenu = ref(false)
 // const showReaderMenu = ref(false)
@@ -21,10 +22,6 @@ const showServicePopup = ref(false)
 const showSearchPopup = ref(false)
 // 點擊外部自動關閉 popup
 onMounted(() => {
-  // 強制清除登入狀態（每次開啟網頁都登出）
-  localStorage.removeItem('user')
-  localStorage.removeItem('jwt_token')
-  localStorage.removeItem('user_role')
 
   document.addEventListener('click', (e) => {
     if (
@@ -37,6 +34,7 @@ onMounted(() => {
     ) showSearchPopup.value = false
   })
 })
+
 const newsList = [
   {
     id: 1,
