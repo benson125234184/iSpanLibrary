@@ -676,7 +676,6 @@ a:hover {
     margin-right: 12px;
     text-align: right;
     font-size: larger;
-    /* text-wrap: nowrap; */
 }
 
 .form-group input,
@@ -703,21 +702,19 @@ a:hover {
     margin-bottom: 1.5rem;
 }
 
-
+/* 
 .form-label {
-    text-wrap: nowrap;
-}
+    width: 80px;
+    font-weight: bold;
+    margin-top: 0.3rem;
+} */
 
 .gender-radio {
     display: flex;
-    gap: 1.5rem;
-    align-items: center;
+    /* gap: 2rem; */
     min-width: 100px;
-    font-weight: bold;
-    flex-wrap: wrap;
-    /* 小螢幕時自動換行 */
+    font-weight: bold
 }
-
 
 .education-options {
     display: grid;

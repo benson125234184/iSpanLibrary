@@ -1,7 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'default',
-  layoutTransition: false
+  layout: 'blank',
 })
 </script>
 
@@ -9,7 +8,7 @@ definePageMeta({
 
 
 
-  <div class="forgot-wrapper flex flex-col items-center justify-start gap-6 bg-muted min-h-svh">
+  <div class="flex flex-col items-center justify-center gap-6 bg-muted p-6 min-h-svh md:p-10">
     <div class="max-w-sm w-full flex flex-col gap-6" style="background-color: rgba(255, 255, 255, 0.2);">
       <Card>
         <CardHeader class="text-center">
