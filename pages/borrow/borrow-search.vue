@@ -677,7 +677,7 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  background: transparent;
+  background-color: transparent;
   padding: 20px;
   height: 100vh;
   overflow-y: auto;

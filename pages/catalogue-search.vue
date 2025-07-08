@@ -596,9 +596,9 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  background: transparent;
+  background-color: transparent;
   padding: 20px;
-
+  height: 100vh;
   overflow-y: auto;
   /* 隱藏滾動條（跨瀏覽器） */
   scrollbar-width: none;
