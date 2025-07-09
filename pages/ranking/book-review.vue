@@ -470,6 +470,103 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 0.375rem;
 }
+
+@media (max-width: 768px) {
+  /* .page-container {
+    padding: 1rem;
+  }
+
+  .feature-header {
+    font-size: 1.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .feature-subtitle {
+    font-size: 1rem;
+    padding-left: 0.5rem;
+  }
+
+  .feature-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .feature-card-title {
+    font-size: 1.1rem;
+  }
+
+  .feature-card-text {
+    font-size: 0.85rem;
+  }
+
+  .dual-column {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-item {
+    min-width: 100%;
+    max-width: 100%;
+  } */
+
+  .book-card,
+  .recommend-card {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .book-title {
+    font-size: 1rem;
+  }
+
+  .book-author {
+    font-size: 0.8rem;
+  }
+
+  .form-group select,
+  .form-group textarea,
+  input[type="text"] {
+    font-size: 0.95rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .review-sort-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .back-button {
+    position: static;
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  .review-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .review-actions button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .write-review-options {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch;
+    gap: 1rem !important;
+    padding: 0 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
 </style>
 
 <script setup>

@@ -407,11 +407,102 @@ async function handleClick(label) {
     transform-origin: center center;
 }
 
-html.accessible-mode .door-label {
-    top: 0.6rem;
-}
+@media (max-width: 768px) {
+    .seat-map-wrapper {
+        padding: 0.5rem;
+        overflow-x: auto;
+        overflow-y: visible;
+    }
 
-html.accessible-mode .confirm-button {
-    color: white;
+    .seat-map {
+        width: 100%;
+        /* max-width: unset; */
+        /* transform: scale(0.55); */
+        /* 調整整體縮放 */
+        transform-origin: top center;
+        margin: 0 auto;
+        position: relative;
+        min-height: 100vh;
+        background: transparent;
+    }
+
+    .seat-group {
+        grid-template-columns: repeat(2, 40px);
+        grid-template-rows: repeat(2, 8px);
+        gap: 4px;
+    }
+
+    .seat-container {
+        width: 40px;
+        height: 40px;
+    }
+
+    .seat-label {
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .selected-seat-msg {
+        font-size: 0.9rem;
+        margin-top: 0.8rem;
+    }
+
+    .underline {
+        background-size: 6rem;
+    }
+
+    .confirm-wrapper {
+        margin: 0.8rem 0;
+        text-align: center;
+    }
+
+    .confirm-button {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+
+    .main-door {
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.6);
+    }
+
+    .main-door img {
+        width: 8rem;
+        height: auto;
+        display: none;
+    }
+
+    .main-door .door-label {
+        font-size: 12px;
+        margin-top: -0.4rem;
+        display: none;
+    }
+
+    .door-icon,
+    .toilet-icon {
+        transform: scale(0.6);
+    }
+
+    .door-icon img,
+    .toilet-icon img {
+        width: 2rem;
+        height: auto;
+    }
+
+    .door-label {
+        font-size: 10px;
+    }
+
+    .toilet-icon {
+        bottom: 180px;
+        display: none;
+    }
+
+    .door-icon {
+        top: 30px;
+        right: 0.5rem;
+        display: none;
+    }
 }
 </style>
