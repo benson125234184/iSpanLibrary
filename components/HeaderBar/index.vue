@@ -1,5 +1,6 @@
 <template>
-  <header class="nlpi-header">
+  <MobileHeader v-if="isMobile" />
+  <header v-else class="nlpi-header">
     <div class="nlpi-header-main">
       <!-- 返回首頁按鈕 -->
       <NuxtLink to="/" class="nlpi-logo-link">
@@ -15,6 +16,13 @@
             <rect x="3" y="18" width="22" height="4" rx="2" fill="#003366" />
           </svg>
         </button> -->
+
+        <!-- Backdrop -->
+        <div v-if="isMobileMenuOpen" class="sidebar-backdrop" @click="closeSidebar"></div>
+
+        <!-- <SidebarMenu :isOpen="isMobileMenuOpen" @close="closeSidebar" /> -->
+
+
         <div class="top-links" :class="{ 'menu-open': isMobileMenuOpen }">
           <ul>
             <li v-for="(link, index) in links" :key="link.href || link.label" :title="link.label">
@@ -24,11 +32,6 @@
                 </NuxtLink>
 
               </template>
-              <!-- <template v-else>
-                <button class="a11y-toggle" @click="toggleAccessibility" aria-label="切換視障友善模式">
-                  {{ isAccessible ? '標準模式' : '無障礙模式' }}
-                </button>
-              </template> -->
 
               <span v-if="index !== links.length - 1" class="separator">/</span>
             </li>
@@ -38,24 +41,6 @@
           您好 ~ {{ currentUser.name }} 😆
           <button class="logout-button" @click="handleLogout">登出 ⍈</button>
         </div>
-        <!-- <div class="nlpi-top-links-bar">
-          <div class="nlpi-top-links">
-            <a href='/'>首頁</a> ／
-            <a href='/feedback'>意見信箱</a> ／
-            <a href="#">常見問題</a> ／
-            <a href=''>無障礙專區</a>
-          </div>
-          <div class="nlpi-social-lang">
-            <div class="nlpi-lang-dropdown" @mouseenter="showLangMenu = true" @mouseleave="showLangMenu = false">
-              <button class="nlpi-lang-btn">Language ▼</button>
-              <div v-if="showLangMenu" class="nlpi-lang-menu">
-                <a href="#">繁體中文</a>
-                <a href="#">English</a>
-                <a href="#">日本語</a>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <nav :class="['nlpi-nav', { open: isMobileMenuOpen }]">
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showInfoMenu = true" @mouseleave="showInfoMenu = false">
             <span class="nav-label">最新資訊</span>
@@ -65,15 +50,6 @@
               <NuxtLink to="/event">活動訊息</NuxtLink>
             </div>
           </div>
-          <!-- <div class="nlpi-nav-link nav-dropdown" @mouseenter="showDigitalMenu = true"
-            @mouseleave="showDigitalMenu = false">
-            <span class="nav-label">電子資源</span>
-            <div v-if="showDigitalMenu" class="dropdown-menu">
-              <NuxtLink to="#">電子書</NuxtLink>
-              <NuxtLink to="#">電子期刊</NuxtLink>
-              <NuxtLink to="#">多媒體資源</NuxtLink>
-            </div>
-          </div> -->
           <div class="nlpi-nav-link nav-dropdown" @mouseenter="showReaderMenu = true"
             @mouseleave="showReaderMenu = false">
             <span class="nav-label">讀者服務</span>
@@ -366,15 +342,28 @@ import { generateLink } from '@/composables/useNavigation'
 import { triggerLoginSuccess } from '@/composables/useLoginState'
 import axios from 'axios'
 import CustomAlert from '@/components/CustomAlert.vue'
+import MobileHeader from '~/components/HeaderBar/MobileHeader.vue'
+const isMobile = ref(false)
+
+function checkScreen() {
+  isMobile.value = window.innerWidth < 768
+}
+
+onMounted(() => {
+  checkScreen()
+  window.addEventListener('resize', checkScreen)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScreen)
+})
 
 const router = useRouter()
 
 const showInfoMenu = ref(false)
-const showDigitalMenu = ref(false)
 const showReaderMenu = ref(false)
 const showLocationMenu = ref(false)
 const showAboutMenu = ref(false)
-const showLangMenu = ref(false)
 const showServicePopup = ref(false)
 const showSearchPopup = ref(false)
 const showLoginModal = ref(false)
@@ -687,15 +676,91 @@ onMounted(() => {
   })
 })
 
-const isMobileMenuOpen = ref(false)
-const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-  console.log('isMobileMenuOpen:', isMobileMenuOpen.value)
+//const isMobileMenuOpen = ref(false)
+// const toggleMobileMenu = () => {
+//   isMobileMenuOpen.value = !isMobileMenuOpen.value
+// }
+
+const closeSidebar = () => {
+  isMobileMenuOpen.value = false
+  showInfoMenu.value = false
+  showReaderMenu.value = false
+  showLocationMenu.value = false
+  showAboutMenu.value = false
 }
+
+function handleEscape(e) {
+  if (e.key === 'Escape') closeSidebar()
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleEscape)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleEscape)
+})
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+function handleResize() {
+  if (window.innerWidth >= 1024 && isMobileMenuOpen.value) {
+    closeSidebar()
+  }
+}
+
 
 </script>
 
 <style>
+.sidebar-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 260px;
+  background-color: #fff;
+  z-index: 1000;
+  padding: 4rem 1rem 1rem;
+  /* 上方留多一點空間 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* 保持內部內容左右撐滿 */
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
+  transform: translateX(100%);
+}
+
+.sidebar-slide-enter-to,
+.sidebar-slide-leave-from {
+  transform: translateX(0);
+}
+
 .submenu {
   margin-left: 1rem;
   padding-left: 0.5rem;
@@ -748,6 +813,7 @@ const toggleMobileMenu = () => {
 
 .nlpi-nav {
   display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -764,34 +830,7 @@ const toggleMobileMenu = () => {
 }
 
 /* 手機版響應式設計 */
-@media (max-width: 768px) {
-  .hamburger-btn {
-    display: block;
-  }
 
-  .nlpi-nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    flex-direction: column;
-    padding: 1rem;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-    z-index: 1000;
-  }
-
-  .nlpi-nav.open {
-    display: flex;
-  }
-
-  .nlpi-nav-link {
-    padding: 1rem 0;
-    border-bottom: 1px solid #ddd;
-    font-size: 1.1rem;
-  }
-}
 
 /* 平板 ~ 桌機共用樣式 */
 @media (min-width: 769px) {
@@ -1409,11 +1448,11 @@ const toggleMobileMenu = () => {
   align-items: center;
 }
 
-.nav-label {
+/* .nav-label {
   color: #e65100;
   font-weight: bold;
   letter-spacing: 1px;
-}
+} */
 
 .mega-menu-wrapper {
   position: absolute;
