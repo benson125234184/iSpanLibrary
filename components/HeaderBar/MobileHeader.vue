@@ -18,6 +18,225 @@
                 </ul>
             </div>
 
+            <!-- 線上服務與搜尋欄 -->
+            <div class="nlpi-service-search-bar mobile-only">
+                <div class="nlpi-service-popup-wrap">
+                    <button class="nlpi-service-btn" @click="showServicePopup = !showServicePopup">
+                        <span class="nlpi-btn-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="8" r="4" stroke="#444" stroke-width="2" />
+                                <path d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke="#444" stroke-width="2"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </span>
+                        <span class="nlpi-btn-text">線上服務</span>
+                    </button>
+                    <transition name="fade-slide">
+                        <div v-if="showServicePopup" class="nlpi-service-popup-panel">
+                            <div class="nlpi-popup-content service-cards-content">
+                                <h2 class="service-cards-title">線上服務</h2>
+                                <div class="service-cards-row">
+                                    <div class="service-card" @click="handleUserAction">
+                                        <div class="service-card-inner">
+                                            <div class="service-card-icon">
+                                                <template v-if="!isLoggedIn">
+                                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                                        <rect x="8" y="12" width="32" height="24" rx="3"
+                                                            stroke="#003366" stroke-width="2" />
+                                                        <rect x="14" y="20" width="8" height="8" rx="2" stroke="#003366"
+                                                            stroke-width="2" />
+                                                        <rect x="26" y="20" width="10" height="2" rx="1"
+                                                            fill="#003366" />
+                                                        <rect x="26" y="26" width="10" height="2" rx="1"
+                                                            fill="#003366" />
+                                                    </svg>
+                                                </template>
+                                                <template v-else>
+                                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                                        <circle cx="24" cy="18" r="10" stroke="#003366" stroke-width="2"
+                                                            fill="#e3eaf6" />
+                                                        <ellipse cx="24" cy="34" rx="14" ry="8" stroke="#003366"
+                                                            stroke-width="2" fill="#e3eaf6" />
+                                                    </svg>
+                                                </template>
+                                            </div>
+                                            <div class="service-card-label">{{ isLoggedIn ? userInfo.name : '登入' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="service-card" @click="navigateToEvent">
+                                        <div class="service-card-inner">
+                                            <div class="service-card-icon">
+                                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                                    <rect x="12" y="10" width="24" height="28" rx="2" stroke="#003366"
+                                                        stroke-width="2" />
+                                                    <rect x="16" y="16" width="16" height="2" rx="1" fill="#003366" />
+                                                    <rect x="16" y="22" width="16" height="2" rx="1" fill="#003366" />
+                                                    <rect x="16" y="28" width="10" height="2" rx="1" fill="#003366" />
+                                                </svg>
+                                            </div>
+                                            <div class="service-card-label">報名參加活動</div>
+                                        </div>
+                                    </div>
+                                    <div class="service-card" @click="navigateToReservation">
+                                        <div class="service-card-inner">
+                                            <div class="service-card-icon">
+                                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                                    <rect x="10" y="18" width="28" height="14" rx="3" stroke="#003366"
+                                                        stroke-width="2" />
+                                                    <rect x="14" y="32" width="20" height="4" rx="2" fill="#003366" />
+                                                </svg>
+                                            </div>
+                                            <div class="service-card-label">座位及房間預訂</div>
+                                        </div>
+                                    </div>
+                                    <div class="service-card" @click="navigateToRental">
+                                        <div class="service-card-inner">
+                                            <div class="service-card-icon">
+                                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                                    <rect x="8" y="16" width="32" height="16" rx="3" stroke="#003366"
+                                                        stroke-width="2" />
+                                                    <rect x="16" y="24" width="16" height="6" rx="2" fill="#003366" />
+                                                </svg>
+                                            </div>
+                                            <div class="service-card-label">場地及房間租賃</div>
+                                        </div>
+                                    </div>
+                                    <div class="service-card" @click="navigateToTour">
+                                        <div class="service-card-inner">
+                                            <div class="service-card-icon">
+                                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                                    <rect x="10" y="14" width="28" height="20" rx="3" stroke="#003366"
+                                                        stroke-width="2" />
+                                                    <rect x="16" y="20" width="16" height="2" rx="1" fill="#003366" />
+                                                    <rect x="16" y="26" width="10" height="2" rx="1" fill="#003366" />
+                                                </svg>
+                                            </div>
+                                            <div class="service-card-label">參觀與遊覽</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div class="nlpi-btn-divider"></div>
+                <button class="nlpi-service-btn" @click="toggleSearchInput">
+                    <span class="nlpi-btn-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                            <circle cx="11" cy="11" r="7" stroke="#444" stroke-width="2" />
+                            <path d="M20 20L17 17" stroke="#444" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </span>
+                    <span class="nlpi-btn-text">搜尋</span>
+                </button>
+                <transition name="fade-slide">
+                    <div v-if="showSearchInput" class="search-input-panel">
+                        <input type="text" v-model="keyword" placeholder="站內搜尋" class="search-input"
+                            @keyup.enter="submitSearch" />
+                        <button class="search-icon" @click="submitSearch">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <circle cx="11" cy="11" r="7" stroke="#444" stroke-width="2" />
+                                <path d="M20 20L17 17" stroke="#444" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </transition>
+            </div>
+
+            <!-- 登入懸浮視窗 -->
+            <transition name="login-overlay-fade">
+                <div v-if="showLoginModal" class="login-modal-overlay" @click="closeLoginModal">
+                    <transition name="login-modal-zoom">
+                        <div v-if="showLoginModal" class="login-modal" @click.stop>
+                            <div class="login-modal-header">
+                                <h3>會員登入</h3>
+                                <button class="close-btn" @click="closeLoginModal">×</button>
+                            </div>
+                            <div class="login-modal-body">
+                                <form @submit.prevent="handleLogin" class="login-form">
+                                    <div class="form-group">
+                                        <label for="email">電子郵件</label>
+                                        <input id="email" v-model="loginForm.email" type="email" placeholder="請輸入您的電子郵件"
+                                            required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">密碼</label>
+                                        <input id="password" v-model="loginForm.password"
+                                            :type="showPassword ? 'text' : 'password'" placeholder="請輸入您的密碼" required />
+                                        <button type="button" @click="showPassword = !showPassword">👁</button>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="login-btn" :disabled="isLoggingIn">
+                                            {{ isLoggingIn ? '登入中...' : '登入' }}
+                                        </button>
+                                    </div>
+                                    <div class="form-links">
+                                        <a href="/forgot-password" class="forgot-password">忘記密碼？</a>
+                                        <a href="/application/card-application" class="register-link">申請新帳號</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+            </transition>
+
+            <!-- 用戶選單 -->
+            <transition name="user-menu-fade">
+                <div v-if="showUserMenu && isLoggedIn" class="user-menu-overlay" @click="showUserMenu = false">
+                    <div class="user-menu" @click.stop>
+                        <div class="user-menu-header">
+                            <div class="user-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="8" r="4" stroke="#003366" stroke-width="2" />
+                                    <path d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke="#003366" stroke-width="2"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name">
+                                    {{ userInfo.name }}
+                                    <span class="user-role-label">
+                                        {{ userInfo.role === 'admin' ? '管理員' : '會員' }}
+                                    </span>
+                                </div>
+                                <div class="user-email" v-if="userInfo.role !== 'admin'">{{ userInfo.email }}</div>
+                            </div>
+                        </div>
+                        <div class="user-menu-body">
+                            <button class="user-menu-item" @click="navigateToMemberPage">
+                                <span class="menu-icon">👤</span>
+                                個人資料
+                            </button>
+                            <button class="user-menu-item" @click="navigateToBorrowRecord">
+                                <span class="menu-icon">📚</span>
+                                借閱紀錄
+                            </button>
+                            <button class="user-menu-item" @click="navigateToReservationRecord">
+                                <span class="menu-icon">📅</span>
+                                預約紀錄
+                            </button>
+                            <button class="user-menu-item" v-if="userInfo.role === 'admin'"
+                                @click="navigateToManagerPage">
+                                <span class="menu-icon">🛠️</span>
+                                管理員介面
+                            </button>
+                            <div class="user-menu-divider"></div>
+                            <button class="user-menu-item user-menu-logout" @click="logout">
+                                <span class="menu-icon">🚪</span>
+                                登出
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
+            <!-- CustomAlert -->
+            <CustomAlert :show="showAlert" :title="alertTitle" :message="alertMessage" :type="alertType"
+                :confirm-text="alertConfirmText" @close="closeAlert" @confirm="handleAlertConfirm" />
+
+
             <div v-if="currentUser" class="welcome-message-with-logout">
                 您好 ~ {{ currentUser.name }} 😆
                 <button class="logout-button" @click="handleLogout">登出 ⍈</button>
@@ -127,96 +346,6 @@
                 </transition>
             </div>
         </div>
-        <!-- 登入懸浮視窗 -->
-        <transition name="login-overlay-fade">
-            <div v-if="showLoginModal" class="login-modal-overlay" @click="closeLoginModal">
-                <transition name="login-modal-zoom">
-                    <div v-if="showLoginModal" class="login-modal" @click.stop>
-                        <div class="login-modal-header">
-                            <h3>會員登入</h3>
-                            <button class="close-btn" @click="closeLoginModal">×</button>
-                        </div>
-                        <div class="login-modal-body">
-                            <form @submit.prevent="handleLogin" class="login-form">
-                                <div class="form-group">
-                                    <label for="email">電子郵件</label>
-                                    <input id="email" v-model="loginForm.email" type="email" placeholder="請輸入您的電子郵件"
-                                        required />
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">密碼</label>
-                                    <input id="password" v-model="loginForm.password"
-                                        :type="showPassword ? 'text' : 'password'" placeholder="請輸入您的密碼" required />
-                                    <button type="button" @click="showPassword = !showPassword">👁</button>
-                                </div>
-                                <div class="form-actions">
-                                    <button type="submit" class="login-btn" :disabled="isLoggingIn">
-                                        {{ isLoggingIn ? '登入中...' : '登入' }}
-                                    </button>
-                                </div>
-                                <div class="form-links">
-                                    <a href="/forgot-password" class="forgot-password">忘記密碼？</a>
-                                    <a href="/application/card-application" class="register-link">申請新帳號</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </transition>
-            </div>
-        </transition>
-
-        <!-- 用戶選單 -->
-        <transition name="user-menu-fade">
-            <div v-if="showUserMenu && isLoggedIn" class="user-menu-overlay" @click="showUserMenu = false">
-                <div class="user-menu" @click.stop>
-                    <div class="user-menu-header">
-                        <div class="user-avatar">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="8" r="4" stroke="#003366" stroke-width="2" />
-                                <path d="M4 20c0-2.21 3.582-4 8-4s8 1.79 8 4" stroke="#003366" stroke-width="2"
-                                    stroke-linecap="round" />
-                            </svg>
-                        </div>
-                        <div class="user-info">
-                            <div class="user-name">
-                                {{ userInfo.name }}
-                                <span class="user-role-label">
-                                    {{ userInfo.role === 'admin' ? '管理員' : '會員' }}
-                                </span>
-                            </div>
-                            <div class="user-email" v-if="userInfo.role !== 'admin'">{{ userInfo.email }}</div>
-                        </div>
-                    </div>
-                    <div class="user-menu-body">
-                        <button class="user-menu-item" @click="navigateToMemberPage">
-                            <span class="menu-icon">👤</span>
-                            個人資料
-                        </button>
-                        <button class="user-menu-item" @click="navigateToBorrowRecord">
-                            <span class="menu-icon">📚</span>
-                            借閱紀錄
-                        </button>
-                        <button class="user-menu-item" @click="navigateToReservationRecord">
-                            <span class="menu-icon">📅</span>
-                            預約紀錄
-                        </button>
-                        <button class="user-menu-item" v-if="userInfo.role === 'admin'" @click="navigateToManagerPage">
-                            <span class="menu-icon">🛠️</span>
-                            管理員介面
-                        </button>
-                        <div class="user-menu-divider"></div>
-                        <button class="user-menu-item user-menu-logout" @click="logout">
-                            <span class="menu-icon">🚪</span>
-                            登出
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </transition>
-
-        <!-- CustomAlert -->
-        <CustomAlert :show="showAlert" :title="alertTitle" :message="alertMessage" :type="alertType"
-            :confirm-text="alertConfirmText" @close="closeAlert" @confirm="handleAlertConfirm" />
 
     </header>
 </template>
@@ -676,7 +805,7 @@ let links = [
         justify-content: space-between;
         flex-wrap: wrap;
         /* 若空間不足則換行 */
-        padding: 0.75rem 1rem;
+        padding: 0.75rem;
     }
 
     .nlpi-logo-link {
@@ -726,12 +855,15 @@ let links = [
     }
 }
 
+.nlpi-service-search-bar.mobile-only {
+    transform: translate(6rem, -4rem);
+}
+
 
 .welcome-message-with-logout {
     font-size: large;
     margin-right: 7rem;
     color: #003366;
-    transform: translateY(2rem);
 }
 
 .logout-button {
@@ -751,9 +883,27 @@ let links = [
 @media (max-width: 768px) {
     .welcome-message-with-logout {
         font-size: 0.85rem;
+        margin-left: 6rem;
+        margin-bottom: 0.2rem;
         margin-top: 0.5rem;
-        margin-left: 5rem;
-        align-self: flex-start;
+    }
+
+    .nlpi-service-search-bar.mobile-only {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin-top: -7rem;
+        margin-left: 0;
+        transform: none;
+        width: 100%;
+    }
+
+    .nlpi-service-popup-panel {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0.5rem;
     }
 }
 
@@ -796,7 +946,7 @@ let links = [
     position: absolute;
     top: 100%;
     right: 0;
-    z-index: 1000;
+    z-index: 3000;
     background: #fff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
@@ -825,6 +975,7 @@ let links = [
 .service-card {
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+
 }
 
 .service-card-inner {
@@ -1045,15 +1196,17 @@ let links = [
     }
 
     .nlpi-service-popup-panel {
-        width: 100%;
-        left: 0;
+        width: 100%nlpi-service-popup-panel;
+        left: ;
         right: auto;
+
     }
 
     .search-input-panel {
         width: 100%;
         left: 0;
         right: auto;
+        z-index: 2000 !important;
     }
 }
 
@@ -1077,20 +1230,4 @@ let links = [
     margin-top: 3rem;
     object-fit: contain;
 }
-
-/* .dropdown-up {
-    bottom: 100%;
-    top: auto;
-    position: absolute;
-} */
-
-/* .dropdown-menu {
-    position: absolute;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    padding: 0.5rem 0;
-    z-index: 1000;
-    white-space: nowrap;
-} */
 </style>
