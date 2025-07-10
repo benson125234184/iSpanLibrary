@@ -1,6 +1,16 @@
 <template>
   <div class="container">
-    <h1>館藏查詢</h1>
+    <div class="search-header">
+      <h1>館藏查詢</h1>
+      <div v-if="searchElapsed !== null" class="search-elapsed search-elapsed-inline">
+        <template v-if="searched">
+          查詢耗時：{{ Math.round(searchElapsed) }} 毫秒
+        </template>
+        <template v-else>
+          查詢中...{{ Math.round(searchElapsed) }} 毫秒
+        </template>
+      </div>
+    </div>
     <!-- Simple Search -->
     <div v-if="!isAdvancedSearch" class="simple-search">
       <div class="search-bar">
@@ -102,6 +112,7 @@
           <div class="result-row">
             <span class="result-label">排序：</span>
             <select v-model="sortConfig.field" class="result-select">
+              <option value="relevance">相關性</option>
               <option value="title_desc">書名↓</option>
               <option value="title_asc">書名↑</option>
               <option value="author_desc">作者↓</option>
@@ -186,8 +197,9 @@ const currentPage = ref(1);
 const pageSizes = ref([10, 25, 50]);
 const itemsPerPage = ref(10);
 const sortConfig = ref({
-  field: 'title_asc'
+  field: 'relevance'
 });
+const searchElapsed = ref(null); // 查詢耗時（毫秒）
 
 // 添加缺少的 ref 變數
 const yearFrom = ref('');
@@ -209,6 +221,8 @@ const languageOptions = ref([
   { value: '法文', label: '法文' },
   { value: '德文', label: '德文' }
 ]);
+
+let searchTimer = null;
 
 onMounted(async () => {
   const route = useRoute();
@@ -282,7 +296,7 @@ const fetchBooks = async (params) => {
         ...params,
         page: currentPage.value - 1,
         size: itemsPerPage.value
-        // sortField 和 sortDir 已經在 params 裡
+
       }
     });
 
@@ -376,18 +390,38 @@ const performSimpleSearch = async () => {
     };
     searched.value = true;
     currentPage.value = 1;
+    searchElapsed.value = null;
+    if (searchTimer) clearInterval(searchTimer);
     return;
   }
 
-  // 取得排序欄位與方向
-  const [field, direction] = sortConfig.value.field.split('_');
+  // 計時開始
+  const start = performance.now();
+  searchElapsed.value = 0;
+  if (searchTimer) clearInterval(searchTimer);
+  searched.value = false; // 標記查詢尚未完成
+  searchTimer = setInterval(() => {
+    searchElapsed.value = performance.now() - start;
+  }, 30);
 
-  await fetchBooks({
+  let params = {
     field: 'fulltext',
-    keyword: query,
-    sortField: field,
-    sortDir: direction
-  });
+    keyword: query
+  };
+  if (sortConfig.value.field !== 'relevance') {
+    const [field, direction] = sortConfig.value.field.split('_');
+    params.sortField = field;
+    params.sortDir = direction;
+  }
+
+  await fetchBooks(params);
+
+  // 計時結束
+  const end = performance.now();
+  if (searchTimer) clearInterval(searchTimer);
+  searchTimer = null;
+  searchElapsed.value = end - start;
+  searched.value = true; // 標記查詢完成
   scrollToContainerTop();
 };
 
@@ -440,18 +474,20 @@ const performAdvancedSearch = async () => {
     });
   }
 
-  // 分頁與排序參數
-  const [sortField, sortDir] = sortConfig.value.field.split('_');
+  let params = {
+    page: currentPage.value - 1,
+    size: itemsPerPage.value
+  };
+  if (sortConfig.value.field !== 'relevance') {
+    const [sortField, sortDir] = sortConfig.value.field.split('_');
+    params.sortField = sortField;
+    params.sortDir = sortDir;
+  }
 
   try {
     console.log('→ Advanced Search Payload:', conditions);
     const response = await axios.post('http://localhost:8080/api/books/advanced-search', conditions, {
-      params: {
-        page: currentPage.value - 1,
-        size: itemsPerPage.value,
-        sortField,
-        sortDir
-      }
+      params
     });
 
     // 為每本書獲取封面
@@ -1041,5 +1077,18 @@ h2 {
     height: 120px;
     margin-right: 10px;
   }
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+
+.search-elapsed-inline {
+  font-size: 1rem;
+  color: #ff0000;
+  margin-bottom: 0;
 }
 </style>
