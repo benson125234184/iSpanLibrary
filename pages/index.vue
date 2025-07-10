@@ -15,6 +15,7 @@
             </h3>
             <div class="news-date-large">{{ newsList[0].date }}</div>
             <div class="news-desc-large">{{ newsList[0].desc }}</div>
+            <NuxtLink :to="`/news-detail/${newsList[0].id}`" class="news-read-more-btn">查看更多</NuxtLink>
           </div>
         </div>
       </div>
@@ -557,7 +558,8 @@ function getShowBooks() {
 .catalog-icon {
   width: 80px;
   height: 80px;
-  background: #1976d2;
+  background: url('/images/timelogo.png') no-repeat center center;
+  background-size: cover;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -661,5 +663,99 @@ function getShowBooks() {
   min-height: 8em !important;
   margin-bottom: 0.5rem !important;
   white-space: normal !important;
+}
+
+/* 以下響應式只針對上方一大則新聞卡片進行調整 */
+
+@media (max-width: 768px) {
+  .news-card-large {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    /* 確保不被額外間距擠爆 */
+    box-sizing: border-box;
+  }
+
+  .news-img-large {
+    width: 68% !important;
+    height: auto !important;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .news-info-large {
+    width: 68%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .news-section {
+    padding: 0 1rem !important;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  .book-carousel-section {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+
+  .book-carousel-wrap {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: 0 2rem;
+    /* 留左右空間給箭頭 */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+  }
+
+  .book-carousel-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .book-carousel-item {
+    width: 65%;
+    max-width: 280px;
+    flex-shrink: 0;
+    margin: 0 auto;
+  }
+
+  .carousel-btn.big {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    background: #1976d2;
+    color: white;
+  }
+
+  .carousel-btn.big:first-of-type {
+    left: 0;
+  }
+
+  .carousel-btn.big:last-of-type {
+    right: 0;
+  }
+
+  .catalog-card {
+    width: 100%;
+    margin-left: 0;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
 }
 </style>

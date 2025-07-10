@@ -739,6 +739,10 @@ let links = [
 }
 
 @media (max-width: 768px) {
+    .nlpi-logo {
+        margin-bottom: 1rem;
+    }
+
     .dropdown-menu {
         position: relative;
         top: auto;
@@ -1227,7 +1231,6 @@ let links = [
     cursor: pointer;
     width: 3rem;
     height: 3rem;
-    margin-top: 3rem;
     object-fit: contain;
 }
 </style>
